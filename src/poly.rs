@@ -1,11 +1,36 @@
 use crate::traits::*;
-use std::cmp::max;
+use std::fmt::Display;
 use std::ops::{Add, Mul, Neg, Sub};
+
+use std::cmp::max;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Poly<T: Ring> {
     coeffs: Vec<T>,
 }
+
+/*
+impl<T: Ring + Display> Display for Poly<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let degree = self.degree();
+        match degree {
+            Some(degree) => {
+                let result = String::new();
+                for i in 0..=degree {
+                    let coeff = self.coeffs.get(i).cloned().unwrap_or(T::zero());
+                    if coeff == T::zero() {
+                        continue
+                    } else {
+                        result +=  coeff.fmt();
+                    }
+                }
+                write!(f, "{}", result)
+            },
+            None => write!(f, "0")
+        }
+    }
+}
+*/
 
 impl<T: Ring> Poly<T> {
     /// Remove all trailing zeros
@@ -55,8 +80,8 @@ impl<T: Ring> Add for Poly<T> {
         let max_degree = max(self.degree(), rhs.degree());
         match max_degree {
             Some(max_degree) => {
-                let mut result = Vec::with_capacity(max_degree);
-                for i in 0..max_degree {
+                let mut result = Vec::with_capacity(max_degree + 1);
+                for i in 0..=max_degree {
                     let a = self.coeffs.get(i).cloned().unwrap_or(T::zero());
                     let b = rhs.coeffs.get(i).cloned().unwrap_or(T::zero());
                     result.push(a + b);
@@ -74,8 +99,8 @@ impl<T: Ring> Neg for Poly<T> {
         let degree = self.degree();
         match degree {
             Some(degree) => {
-                let mut result = Vec::with_capacity(degree);
-                for i in 0..degree {
+                let mut result = Vec::with_capacity(degree + 1);
+                for i in 0..=degree {
                     let a = self.coeffs.get(i).cloned().unwrap_or(T::zero());
                     result.push(-a);
                 }
@@ -96,20 +121,24 @@ impl<T: Ring> Sub for Poly<T> {
 impl<T: Ring> Mul for Poly<T> {
     type Output = Self;
     fn mul(self, rhs: Self) -> Self::Output {
-        let degree = self.degree().unwrap_or_default() + rhs.degree().unwrap_or_default();
-
-        let mut result = Vec::with_capacity(degree);
-        for k in 0..degree {
-            let mut kth_coeff = T::zero();
-            for i in 0..k {
-                let j = k - i;
-                let a = self.coeffs.get(i).cloned().unwrap_or(T::zero());
-                let b = self.coeffs.get(j).cloned().unwrap_or(T::zero());
-                kth_coeff = kth_coeff + a * b;
+        match (self.degree(), rhs.degree()) {
+            (None, _) | (_, None) => Self::zero(),
+            (Some(d1), Some(d2)) => {
+                let result_degree = d1 + d2;
+                let mut result = Vec::with_capacity(result_degree + 1);
+                for k in 0..=result_degree {
+                    let mut kth_coeff = T::zero();
+                    for i in 0..=k {
+                        let j = k - i;
+                        let a = self.coeffs.get(i).cloned().unwrap_or(T::zero());
+                        let b = rhs.coeffs.get(j).cloned().unwrap_or(T::zero());
+                        kth_coeff = kth_coeff + a * b;
+                    }
+                    result.push(kth_coeff);
+                }
+                Self::new(result)
             }
-            result.push(kth_coeff);
         }
-        Self::new(result)
     }
 }
 

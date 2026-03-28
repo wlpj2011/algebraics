@@ -1,7 +1,7 @@
 use algebraics::prime_field::Fp;
 use algebraics::traits::{Field, One, Zero};
 
-// Edge case worth having — characteristic 2 behavior is genuinely surprising
+// Edge case worth having for characteristic 2
 #[test]
 fn test_fp2_negation() {
     assert_eq!(-Fp::<2>::new(1), Fp::<2>::new(1));

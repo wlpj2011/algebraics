@@ -1,8 +1,15 @@
 use crate::traits::*;
+use std::fmt::Display;
 use std::ops::{Add, Mul, Neg, Sub};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Fp<const P: u64>(u64);
+
+impl<const P: u64> Display for Fp<P> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
 
 impl<const P: u64> Zero for Fp<P> {
     fn zero() -> Self {
