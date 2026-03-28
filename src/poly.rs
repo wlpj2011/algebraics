@@ -10,7 +10,7 @@ pub struct Poly<T: Ring> {
 impl<T: Ring> Poly<T> {
     /// Remove all trailing zeros
     fn normalize(mut coeffs: Vec<T>) -> Vec<T> {
-        while coeffs.last().map_or(false, |c| c == &T::zero()) {
+        while coeffs.last().is_some_and(|c| c == &T::zero()) {
             coeffs.pop();
         }
         coeffs

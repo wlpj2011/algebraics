@@ -22,7 +22,7 @@ pub trait AbelianGroup: Group {}
 ///   - additive AbelianGroup
 ///   - multiplicative Monoid (with One)
 ///   - multiplication distributes over addition
-/// Distributivity is a semantic contract.
+///     Distributivity is a semantic contract.
 pub trait Ring: AbelianGroup + Mul<Output = Self> + One {}
 
 /// A Ring whose multiplication is commutative.
