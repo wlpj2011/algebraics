@@ -1,5 +1,5 @@
 use algebraics::prime_field::Fp;
-use algebraics::traits::{Zero, One, Field};
+use algebraics::traits::{Field, One, Zero};
 
 // Edge case worth having — characteristic 2 behavior is genuinely surprising
 #[test]
@@ -60,7 +60,6 @@ fn test_fp53_fermat_little_theorem() {
     }
 }
 
-// Reduction behavior — worth one test, not three
 #[test]
 fn test_reduction() {
     assert_eq!(Fp::<7>::new(10), Fp::<7>::new(3));
