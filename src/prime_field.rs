@@ -129,8 +129,6 @@ impl<const P: u64> FiniteRing for Fp<P> {
     }
 }
 
-impl<const P: u64> FiniteField for Fp<P> {}
-
 fn mod_pow(mut base: u64, mut exp: u64, modulus: u64) -> u64 {
     let mut result = 1u64;
     base %= modulus;
