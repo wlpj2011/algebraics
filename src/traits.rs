@@ -2,7 +2,7 @@
 //!
 //! The hierarchy follows: `Magma → Semigroup → Monoid → Group →
 //! AbelianGroup → Ring → CommutativeRing → IntegralDomain → Field`
-//! 
+//!
 //! There is also the side hierarchy: `Finite → FiniteRing → FiniteField`
 
 use std::ops::{Add, Mul, Neg, Sub};
@@ -31,11 +31,9 @@ pub trait AbelianGroup: Group {}
 ///   - multiplication distributes over addition
 ///     Distributivity is a semantic contract.
 pub trait Ring: AbelianGroup + Mul<Output = Self> + One {
-     /// Returns the characteristic of the ring. Return 0 for infinite characteristic.
+    /// Returns the characteristic of the ring. Return 0 for infinite characteristic.
     fn characteristic() -> u64;
 }
-
-   
 
 /// A Ring whose multiplication is commutative.
 /// Commutativity is a semantic contract.
@@ -73,7 +71,6 @@ pub trait Finite: Sized {
 }
 
 pub trait FiniteGroup: Finite + Group {}
-
 
 /// A Finite Ring. Should provide a way to find invertible elements and iterate through just those.
 pub trait FiniteRing: Finite + Ring {
