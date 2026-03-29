@@ -1,14 +1,14 @@
 use crate::poly::Poly;
-use crate::traits::FiniteRing;
+use crate::traits::{Finite, Zero};
 
-pub struct PolyIter<T: FiniteRing> {
+pub struct PolyIter<T: Finite> {
     current: Vec<T>,
     elements: Vec<T>, // all elements of T, computed once
     indices: Vec<usize>,
     done: bool,
 }
 
-impl<T: FiniteRing> PolyIter<T> {
+impl<T: Finite + Zero + Clone + PartialEq> PolyIter<T> {
     /// Iterates over all polynomials of degree less than or equal to n,
     /// i.e. with at most n+1 coefficients
     pub fn all_of_bounded_degree(n: usize) -> Self {
@@ -28,7 +28,7 @@ impl<T: FiniteRing> PolyIter<T> {
     }
 }
 
-impl<T: FiniteRing + Clone> Iterator for PolyIter<T> {
+impl<T: Finite + Clone + Zero + PartialEq> Iterator for PolyIter<T> {
     type Item = Poly<T>;
 
     fn next(&mut self) -> Option<Self::Item> {
