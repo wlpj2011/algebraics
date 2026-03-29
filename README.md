@@ -1,6 +1,6 @@
 # algebraics
 
-A personal algebraic computation library written in Rust. The goal is not a general-purpose system on the scale of Sage or Oscar, but something an individual can build, understand in full, and use as a substrate for research-level computation in algebraic number theory.
+A personal algebraic computation library written in Rust. The goal is not a general-purpose system on the scale of Sage, but something an individual can build, understand in full, and use as a substrate for research-level computation in algebraic number theory.
 
 ## Goals
 
@@ -33,7 +33,6 @@ cargo test
 ```rust
 use algebraics::prime_field::Fp;
 use algebraics::poly::Poly;
-use algebraics::traits::{Zero, One};
 
 // Elements of F_7
 let a = Fp::<7>::new(3);
@@ -42,9 +41,11 @@ assert_eq!(a + b, Fp::<7>::new(1));  // 3 + 5 = 1 mod 7
 
 // Polynomials over F_7
 // p = 1 + 2x + 3x^2,  q = 4 + 5x
+// The reference &p, &q prevents p,q from being 'consumed' by taking their product
 let p = Poly::new(vec![Fp::<7>::new(1), Fp::<7>::new(2), Fp::<7>::new(3)]);
 let q = Poly::new(vec![Fp::<7>::new(4), Fp::<7>::new(5)]);
-let product = p * q;
+let product = &p * &q;
+println!("({}) * ({}) = {}", p, q, product)
 ```
 
 Instantiation with a composite modulus is a compile-time error:

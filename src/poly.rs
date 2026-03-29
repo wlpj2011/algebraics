@@ -88,10 +88,10 @@ impl<T: Ring> One for Poly<T> {
     }
 }
 
-impl<T: Ring> Add for Poly<T> {
-    type Output = Self;
+impl<T: Ring> Add for &Poly<T> {
+    type Output = Poly<T>;
 
-    fn add(self, rhs: Self) -> Self::Output {
+    fn add(self, rhs: Self) -> Poly<T> {
         let max_degree = max(self.degree(), rhs.degree());
         match max_degree {
             Some(max_degree) => {
@@ -101,15 +101,22 @@ impl<T: Ring> Add for Poly<T> {
                     let b = rhs.coeffs.get(i).cloned().unwrap_or(T::zero());
                     result.push(a + b);
                 }
-                Self::new(result)
+                Poly::new(result)
             }
-            None => Self::zero(),
+            None => Poly::zero(),
         }
     }
 }
 
-impl<T: Ring> Neg for Poly<T> {
+impl<T: Ring> Add for Poly<T> {
     type Output = Self;
+    fn add(self, rhs: Self) -> Self {
+        &self + &rhs
+    }
+}
+
+impl<T: Ring> Neg for &Poly<T> {
+    type Output = Poly<T>;
     fn neg(self) -> Self::Output {
         let degree = self.degree();
         match degree {
@@ -119,25 +126,37 @@ impl<T: Ring> Neg for Poly<T> {
                     let a = self.coeffs.get(i).cloned().unwrap_or(T::zero());
                     result.push(-a);
                 }
-                Self::new(result)
+                Poly::new(result)
             }
-            None => Self::zero(),
+            None => Poly::zero(),
         }
+    }
+}
+
+impl<T: Ring> Neg for Poly<T> {
+    type Output = Self;
+    fn neg(self) -> Self { -&self }
+}
+
+impl<T: Ring> Sub for &Poly<T> {
+    type Output = Poly<T>;
+    fn sub(self, rhs: Self) -> Self::Output {
+        self + &(-rhs)
     }
 }
 
 impl<T: Ring> Sub for Poly<T> {
     type Output = Self;
     fn sub(self, rhs: Self) -> Self::Output {
-        self + (-rhs)
+        &self + &(-&rhs)
     }
 }
 
-impl<T: Ring> Mul for Poly<T> {
-    type Output = Self;
+impl<T: Ring> Mul for &Poly<T> {
+    type Output = Poly<T>;
     fn mul(self, rhs: Self) -> Self::Output {
         match (self.degree(), rhs.degree()) {
-            (None, _) | (_, None) => Self::zero(),
+            (None, _) | (_, None) => Poly::zero(),
             (Some(d1), Some(d2)) => {
                 let result_degree = d1 + d2;
                 let mut result = Vec::with_capacity(result_degree + 1);
@@ -151,9 +170,16 @@ impl<T: Ring> Mul for Poly<T> {
                     }
                     result.push(kth_coeff);
                 }
-                Self::new(result)
+                Poly::new(result)
             }
         }
+    }
+}
+
+impl<T:Ring> Mul for Poly<T> {
+    type Output = Self;
+    fn mul(self, rhs: Self) -> Self::Output {
+        &self * &rhs
     }
 }
 
