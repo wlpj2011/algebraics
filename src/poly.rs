@@ -9,30 +9,44 @@ pub struct Poly<T: Ring> {
     coeffs: Vec<T>,
 }
 
-/*
 impl<T: Ring + Display> Display for Poly<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let degree = self.degree();
-        match degree {
+        match self.degree() {
+            None => write!(f, "0"),
             Some(degree) => {
-                let result = String::new();
-                for i in 0..=degree {
+                let mut first = true;
+                for i in (0..=degree).rev() {
                     let coeff = self.coeffs.get(i).cloned().unwrap_or(T::zero());
                     if coeff == T::zero() {
-                        continue
+                        continue;
+                    }
+                    if coeff == T::one() {
+                        if !first {
+                            write!(f, " + ")?;
+                        }
+                        match i {
+                            0 => write!(f, "{}", coeff)?,
+                            1 => write!(f, "x")?,
+                            _ => write!(f, "x^{}", i)?,
+                        }
+                        first = false;
                     } else {
-                        result +=  coeff.fmt();
+                        if !first {
+                            write!(f, " + ")?;
+                        }
+                        match i {
+                            0 => write!(f, "{}", coeff)?,
+                            1 => write!(f, "{}*x", coeff)?,
+                            _ => write!(f, "{}*x^{}", coeff, i)?,
+                        }
+                        first = false;
                     }
                 }
-                write!(f, "{}", result)
-            },
-            None => write!(f, "0")
+                Ok(())
+            }
         }
     }
 }
-
-*/
-
 impl<T: Ring> Poly<T> {
     /// Remove all trailing zeros
     fn normalize(mut coeffs: Vec<T>) -> Vec<T> {

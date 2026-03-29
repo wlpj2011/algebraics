@@ -89,7 +89,7 @@ fn test_degree_mul() {
                     let a = Poly::new(vec![F::new(a0), F::new(a1)]);
                     let b = Poly::new(vec![F::new(b0), F::new(b1)]);
                     let prod_deg = (a.clone() * b.clone()).degree().unwrap();
-                     let sum_of_deg =  a.degree().unwrap() + b.degree().unwrap();
+                    let sum_of_deg = a.degree().unwrap() + b.degree().unwrap();
                     assert_eq!(prod_deg, sum_of_deg);
                 }
             }
