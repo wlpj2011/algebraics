@@ -30,7 +30,12 @@ pub trait AbelianGroup: Group {}
 ///   - multiplicative Monoid (with One)
 ///   - multiplication distributes over addition
 ///     Distributivity is a semantic contract.
-pub trait Ring: AbelianGroup + Mul<Output = Self> + One {}
+pub trait Ring: AbelianGroup + Mul<Output = Self> + One {
+     /// Returns the characteristic of the ring. Return 0 for infinite characteristic.
+    fn characteristic() -> u64;
+}
+
+   
 
 /// A Ring whose multiplication is commutative.
 /// Commutativity is a semantic contract.

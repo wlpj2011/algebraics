@@ -188,7 +188,11 @@ impl<T: Ring> Semigroup for Poly<T> {}
 impl<T: Ring> Monoid for Poly<T> {}
 impl<T: Ring> Group for Poly<T> {}
 impl<T: Ring> AbelianGroup for Poly<T> {}
-impl<T: Ring> Ring for Poly<T> {}
+impl<T: Ring> Ring for Poly<T> {
+    fn characteristic() -> u64 {
+        T::characteristic()
+    }
+}
 
 impl<T: CommutativeRing> CommutativeRing for Poly<T> {}
 impl<T: IntegralDomain> IntegralDomain for Poly<T> {}

@@ -60,7 +60,9 @@ impl<const P: u64> Semigroup for Fp<P> {}
 impl<const P: u64> Monoid for Fp<P> {}
 impl<const P: u64> Group for Fp<P> {}
 impl<const P: u64> AbelianGroup for Fp<P> {}
-impl<const P: u64> Ring for Fp<P> {}
+impl<const P: u64> Ring for Fp<P> {
+    fn characteristic() -> u64 { P }
+}
 impl<const P: u64> CommutativeRing for Fp<P> {}
 impl<const P: u64> IntegralDomain for Fp<P> {}
 
@@ -129,7 +131,7 @@ impl<const P: u64> FiniteRing for Fp<P> {
     }
 }
 
-fn mod_pow(mut base: u64, mut exp: u64, modulus: u64) -> u64 {
+const fn mod_pow(mut base: u64, mut exp: u64, modulus: u64) -> u64 {
     let mut result = 1u64;
     base %= modulus;
     while exp > 0 {
