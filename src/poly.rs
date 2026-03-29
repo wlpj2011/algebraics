@@ -30,6 +30,7 @@ impl<T: Ring + Display> Display for Poly<T> {
         }
     }
 }
+
 */
 
 impl<T: Ring> Poly<T> {

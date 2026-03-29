@@ -69,10 +69,28 @@ fn test_degree_sum() {
                         Poly::new(vec![CoeffField::new(a0), CoeffField::new(a1)]);
                     let b: Poly<CoeffField> =
                         Poly::new(vec![CoeffField::new(b0), CoeffField::new(b1)]);
-                    assert!(
-                        (a.clone() + b.clone()).degree().unwrap()
-                            < a.degree().unwrap() + b.degree().unwrap()
-                    )
+
+                    let sum_deg = (a.clone() + b.clone()).degree();
+                    let max_deg = a.degree().unwrap().max(b.degree().unwrap());
+                    assert!(sum_deg.map_or(true, |d| d <= max_deg));
+                }
+            }
+        }
+    }
+}
+
+#[test]
+fn test_degree_mul() {
+    type F = Fp<7u64>;
+    for a1 in 1..7u64 {
+        for b1 in 1..7u64 {
+            for a0 in 0..7u64 {
+                for b0 in 0..7u64 {
+                    let a = Poly::new(vec![F::new(a0), F::new(a1)]);
+                    let b = Poly::new(vec![F::new(b0), F::new(b1)]);
+                    let prod_deg = (a.clone() * b.clone()).degree().unwrap();
+                     let sum_of_deg =  a.degree().unwrap() + b.degree().unwrap();
+                    assert_eq!(prod_deg, sum_of_deg);
                 }
             }
         }
