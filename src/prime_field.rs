@@ -54,7 +54,7 @@ impl<const P: u64> Sub for Fp<P> {
 impl<const P: u64> Mul for Fp<P> {
     type Output = Self;
     fn mul(self, rhs: Self) -> Self {
-        Fp((self.0 * rhs.0) % P)
+        Fp(((self.0 as u128 * rhs.0 as u128) % P as u128) as u64)
     }
 }
 
@@ -141,26 +141,60 @@ const fn mod_pow(mut base: u64, mut exp: u64, modulus: u64) -> u64 {
     base %= modulus;
     while exp > 0 {
         if exp % 2 == 1 {
-            result = (result * base) % modulus;
+            result = ((result as u128 * base as u128) % modulus as u128 ) as u64;
         }
         exp >>= 1;
-        base = (base * base) % modulus;
+        base = ((base as u128 * base as u128 ) % modulus as u128 )as u64;
     }
     result
 }
 
 const fn is_prime(n: u64) -> bool {
-    if n < 2 {
-        return false;
+    if n < 2 { return false; }
+    if n == 2 { return true; }
+    if n % 2 == 0 { return false; }
+    if n < 9 { return true; }
+    if n % 3 == 0 { return false; }
+
+    // Write n-1 as 2^r * d with d odd
+    let mut d = n - 1;
+    let mut r = 0u64;
+    while d % 2 == 0 {
+        d /= 2;
+        r += 1;
     }
-    let mut i = 2;
-    while i * i <= n {
-        if n.is_multiple_of(i) {
+
+    // Witnesses sufficient for all n < 2^64
+    let witnesses: [u64; 12] = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37];
+    let mut i = 0;
+    while i < witnesses.len() {
+        let a = witnesses[i];
+        if a >= n {
+            i += 1;
+            continue;
+        }
+        if !miller_rabin_check(n, a, d, r) {
             return false;
         }
         i += 1;
     }
     true
+}
+
+const fn miller_rabin_check(n: u64, a: u64, d: u64, r: u64) -> bool {
+    let mut x = mod_pow(a, d, n);
+    if x == 1 || x == n - 1 {
+        return true;
+    }
+    let mut i = 0;
+    while i < r - 1 {
+        x = ((x as u128 * x as u128) % n as u128) as u64;
+        if x == n - 1 {
+            return true;
+        }
+        i += 1;
+    }
+    false
 }
 
 #[cfg(test)]

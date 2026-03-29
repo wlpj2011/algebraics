@@ -62,7 +62,6 @@ fn test_reduction() {
 }
 
 #[test]
-#[cfg(feature = "expensive_tests")]
 fn test_large_prime_overflow_mul() {
     const P: u64 = 18_446_744_073_709_551_557; // 2^64 - 59
     let a = Fp::<P>::new(18_446_744_073_709_551_556);
