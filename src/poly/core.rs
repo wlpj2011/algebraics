@@ -135,7 +135,9 @@ impl<T: Ring> Neg for &Poly<T> {
 
 impl<T: Ring> Neg for Poly<T> {
     type Output = Self;
-    fn neg(self) -> Self { -&self }
+    fn neg(self) -> Self {
+        -&self
+    }
 }
 
 impl<T: Ring> Sub for &Poly<T> {
@@ -176,7 +178,7 @@ impl<T: Ring> Mul for &Poly<T> {
     }
 }
 
-impl<T:Ring> Mul for Poly<T> {
+impl<T: Ring> Mul for Poly<T> {
     type Output = Self;
     fn mul(self, rhs: Self) -> Self::Output {
         &self * &rhs

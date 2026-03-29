@@ -64,7 +64,9 @@ impl<const P: u64> Monoid for Fp<P> {}
 impl<const P: u64> Group for Fp<P> {}
 impl<const P: u64> AbelianGroup for Fp<P> {}
 impl<const P: u64> Ring for Fp<P> {
-    fn characteristic() -> u64 { P }
+    fn characteristic() -> u64 {
+        P
+    }
 }
 impl<const P: u64> CommutativeRing for Fp<P> {}
 impl<const P: u64> IntegralDomain for Fp<P> {}
