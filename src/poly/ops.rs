@@ -1,8 +1,23 @@
+//! Arithmetic operators (`Add`, `Sub`, `Mul`, `Neg`) for `Poly<T>`.
+
 use super::core::Poly;
 use crate::traits::*;
 use std::cmp::max;
 use std::ops::{Add, Mul, Neg, Sub};
 
+/// Adds two polynomials by adding their coefficients.
+///  
+/// # Example
+/// ```
+/// # use algebraics::poly::Poly;
+/// # use algebraics::prime_field::Fp;
+/// # use algebraics::traits::{Zero, One};
+/// # type F7 = Fp<7>;
+/// let p1 = Poly::<F7>::new(vec![F7::one(), F7::one()]); // x + 1
+/// let p2 = Poly::<F7>::new(vec![F7::new(2), F7::one()]); // x + 2
+/// let sum = &p1 + &p2;                                    // 2*x + 3 mod 7
+/// assert_eq!(sum.to_string(), "2*x + 3");
+/// ```
 impl<T> Add for &Poly<T>
 where
     T: Clone + Zero + Add<Output = T> + PartialEq,
@@ -26,6 +41,7 @@ where
     }
 }
 
+/// Adds two polynomials by reference; delegates to `&Poly + &Poly`.
 impl<T> Add for Poly<T>
 where
     T: Clone + Zero + Add<Output = T> + PartialEq,
@@ -36,6 +52,18 @@ where
     }
 }
 
+/// Negates a polynomial by negating all its coefficients.
+///  
+/// # Example
+/// ```
+/// # use algebraics::poly::Poly;
+/// # use algebraics::prime_field::Fp;
+/// # use algebraics::traits::{Zero, One};
+/// # type F7 = Fp<7>;
+/// let p = Poly::<F7>::new(vec![F7::one(), F7::one()]); // x + 1
+/// let n = -&p;                                         // -x - 1 mod 7
+/// assert_eq!(n.to_string(), "6*x + 6");               // descending order
+/// ```
 impl<T> Neg for &Poly<T>
 where
     T: Clone + Zero + Neg<Output = T> + PartialEq,
@@ -57,6 +85,7 @@ where
     }
 }
 
+/// Negates a polynomial by reference; delegates to `-&Poly`.
 impl<T> Neg for Poly<T>
 where
     T: Clone + Zero + Neg<Output = T> + PartialEq,
@@ -66,6 +95,20 @@ where
         -&self
     }
 }
+
+/// Subtracts two polynomials by adding the negative of the second.
+///  
+/// # Example
+/// ```
+/// # use algebraics::poly::Poly;
+/// # use algebraics::prime_field::Fp;
+/// # use algebraics::traits::{Zero, One};
+/// # type F7 = Fp<7>;
+/// let p1 = Poly::<F7>::new(vec![F7::one(), F7::one()]); // x + 1
+/// let p2 = Poly::<F7>::new(vec![F7::new(2), F7::one()]); // x + 2
+/// let diff = &p1 - &p2;                                  // -1 mod 7, 0*x
+/// assert_eq!(diff.to_string(), "6");
+/// ```
 
 impl<T> Sub for &Poly<T>
 where
@@ -77,6 +120,7 @@ where
     }
 }
 
+/// Subtracts two polynomials by reference; delegates to `&Poly - &Poly`.
 impl<T> Sub for Poly<T>
 where
     T: Clone + Zero + Add<Output = T> + Neg<Output = T> + PartialEq,
@@ -87,6 +131,19 @@ where
     }
 }
 
+/// Multiplies two polynomials using standard coefficient convolution.
+///  
+/// # Example
+/// ```
+/// # use algebraics::poly::Poly;
+/// # use algebraics::prime_field::Fp;
+/// # use algebraics::traits::{Zero, One};
+/// # type F7 = Fp<7>;
+/// let p1 = Poly::<F7>::new(vec![F7::one(), F7::one()]); // x + 1
+/// let p2 = Poly::<F7>::new(vec![F7::new(2), F7::one()]); // x + 2
+/// let prod = &p1 * &p2;                                   // x^2 + 3*x + 2 mod 7
+/// assert_eq!(prod.to_string(), "x^2 + 3*x + 2");
+/// ```
 impl<T> Mul for &Poly<T>
 where
     T: Clone + Zero + Add<Output = T> + Mul<Output = T> + PartialEq,
@@ -114,6 +171,7 @@ where
     }
 }
 
+/// Multiplies two polynomials by reference; delegates to `&Poly * &Poly`.
 impl<T> Mul for Poly<T>
 where
     T: Clone + Zero + Add<Output = T> + Mul<Output = T> + PartialEq,
