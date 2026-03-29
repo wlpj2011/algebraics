@@ -51,3 +51,24 @@ pub trait Zero {
 pub trait One {
     fn one() -> Self;
 }
+
+
+pub trait Finite: Sized {
+    fn enumerate() -> impl Iterator<Item = Self>;
+    fn size() -> usize;
+}
+pub trait FiniteGroup: Finite + Group {}
+
+pub trait FiniteRing: Finite + Ring {
+    fn is_unit(&self) -> bool;
+    
+    fn units() -> impl Iterator<Item = Self> {
+        Self::enumerate().filter(|x| x.is_unit())
+    }
+}
+
+pub trait FiniteField: FiniteRing + Field {
+    fn multiplicative_group() -> impl Iterator<Item = Self> {
+        Self::units()
+    }
+}

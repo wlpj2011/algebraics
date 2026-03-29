@@ -113,6 +113,24 @@ impl<const P: u64> Fp<P> {
     }
 }
 
+impl<const P: u64> Finite for Fp<P> {
+    fn enumerate() -> impl Iterator<Item = Self> {
+        (0..P).map(Fp::<P>::new)
+    }
+
+    fn size() -> usize {
+        P as usize
+    }
+}
+
+impl<const P: u64> FiniteRing for Fp<P> {
+    fn is_unit(&self) -> bool {
+        !self.is_zero()
+    }
+}
+
+impl<const P: u64> FiniteField for Fp<P> {}
+
 fn mod_pow(mut base: u64, mut exp: u64, modulus: u64) -> u64 {
     let mut result = 1u64;
     base %= modulus;
