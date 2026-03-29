@@ -1,3 +1,6 @@
+//! `Fp<P>` is an implementation of the finite prime fields.
+//! `Fp<P>` Implements Field and FiniteRing, with all the other traits that implies.
+//! There are compile time checks for primality of P.
 use crate::traits::*;
 use std::fmt::Display;
 use std::ops::{Add, Mul, Neg, Sub};
