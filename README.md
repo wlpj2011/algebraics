@@ -8,7 +8,7 @@ The intended scope is as follows:
 
 - Algebraic structures — groups, rings, fields, modules, vector spaces — defined as a trait hierarchy, with implementations for the canonical examples of interest
 - Polynomial rings over arbitrary coefficient rings, and quotient rings thereof
-- Finite fields, with an emphasis on the case $\mathbb{F}_{p^n}$ realized as $\mathbb{F}_p[x]/(f)$ for an irreducible $f$ of degree $n$
+- Finite fields, with an emphasis on the case $\mathbb{F}_{p^n}$ realized as $\mathbb{F}_p[x]/\langle f \rangle$ for an irreducible $f$ of degree $n$
 - Multiplicative and additive characters on finite fields, with a view toward Gauss sum computation
 - Eventually: rings of integers of number fields, and $p$-adic fields
 
