@@ -141,25 +141,35 @@ const fn mod_pow(mut base: u64, mut exp: u64, modulus: u64) -> u64 {
     base %= modulus;
     while exp > 0 {
         if exp % 2 == 1 {
-            result = ((result as u128 * base as u128) % modulus as u128 ) as u64;
+            result = ((result as u128 * base as u128) % modulus as u128) as u64;
         }
         exp >>= 1;
-        base = ((base as u128 * base as u128 ) % modulus as u128 )as u64;
+        base = ((base as u128 * base as u128) % modulus as u128) as u64;
     }
     result
 }
 
 const fn is_prime(n: u64) -> bool {
-    if n < 2 { return false; }
-    if n == 2 { return true; }
-    if n % 2 == 0 { return false; }
-    if n < 9 { return true; }
-    if n % 3 == 0 { return false; }
+    if n < 2 {
+        return false;
+    }
+    if n == 2 {
+        return true;
+    }
+    if n.is_multiple_of(2) {
+        return false;
+    }
+    if n < 9 {
+        return true;
+    }
+    if n.is_multiple_of(3) {
+        return false;
+    }
 
     // Write n-1 as 2^r * d with d odd
     let mut d = n - 1;
     let mut r = 0u64;
-    while d % 2 == 0 {
+    while d.is_multiple_of(2) {
         d /= 2;
         r += 1;
     }
