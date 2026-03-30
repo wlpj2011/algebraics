@@ -1,6 +1,6 @@
+use algebraics::finite_field::Fp;
 use algebraics::poly::Poly;
 use algebraics::poly::PolyIter;
-use algebraics::prime_field::Fp;
 use algebraics::traits::{Finite, One, Zero};
 
 #[test]

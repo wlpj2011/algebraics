@@ -10,7 +10,7 @@ use std::ops::{Add, Mul, Neg, Sub};
 /// # Example
 /// ```
 /// # use algebraics::poly::Poly;
-/// # use algebraics::prime_field::Fp;
+/// # use algebraics::finite_field::Fp;
 /// # use algebraics::traits::{Zero, One};
 /// # type F7 = Fp<7>;
 /// let p1 = Poly::<F7>::new(vec![F7::one(), F7::one()]); // x + 1
@@ -57,7 +57,7 @@ where
 /// # Example
 /// ```
 /// # use algebraics::poly::Poly;
-/// # use algebraics::prime_field::Fp;
+/// # use algebraics::finite_field::Fp;
 /// # use algebraics::traits::{Zero, One};
 /// # type F7 = Fp<7>;
 /// let p = Poly::<F7>::new(vec![F7::one(), F7::one()]); // x + 1
@@ -101,7 +101,7 @@ where
 /// # Example
 /// ```
 /// # use algebraics::poly::Poly;
-/// # use algebraics::prime_field::Fp;
+/// # use algebraics::finite_field::Fp;
 /// # use algebraics::traits::{Zero, One};
 /// # type F7 = Fp<7>;
 /// let p1 = Poly::<F7>::new(vec![F7::one(), F7::one()]); // x + 1
@@ -135,7 +135,7 @@ where
 /// # Example
 /// ```
 /// # use algebraics::poly::Poly;
-/// # use algebraics::prime_field::Fp;
+/// # use algebraics::finite_field::Fp;
 /// # use algebraics::traits::{Zero, One};
 /// # type F7 = Fp<7>;
 /// let p1 = Poly::<F7>::new(vec![F7::one(), F7::one()]); // x + 1

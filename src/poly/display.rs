@@ -11,9 +11,9 @@ use std::fmt::Display;
 ///
 /// # Examples
 /// ```
-/// use algebraics::poly::Poly;
-/// use algebraics::traits::{Zero, One};
-/// # type F = algebraics::prime_field::Fp<7>;
+/// # use algebraics::poly::Poly;
+/// # use algebraics::traits::{Zero, One};
+/// # type F = algebraics::finite_field::Fp<7>;
 ///
 /// let p = Poly::<F>::new(vec![F::one(), F::zero(), F::one()]);
 /// assert_eq!(format!("{}", p), "x^2 + 1");

@@ -12,10 +12,10 @@
 //!
 //! # Examples
 //! ```
-//! use algebraics::poly::Poly;
-//! use algebraics::poly::PolyIter;
-//! use algebraics::prime_field::Fp;
-//! use algebraics::traits::{Zero, One};
+//! # use algebraics::poly::Poly;
+//! # use algebraics::poly::PolyIter;
+//! # use algebraics::finite_field::Fp;
+//! # use algebraics::traits::{Zero, One};
 //!
 //! type F7 = Fp<7>;
 //!
