@@ -109,7 +109,6 @@ where
 /// let diff = &p1 - &p2;                                  // -1 mod 7, 0*x
 /// assert_eq!(diff.to_string(), "6");
 /// ```
-
 impl<T> Sub for &Poly<T>
 where
     T: Clone + Zero + Add<Output = T> + Neg<Output = T> + PartialEq,
