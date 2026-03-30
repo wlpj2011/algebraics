@@ -2,7 +2,7 @@
 //!
 //! The hierarchy follows: `Magma → Semigroup → Monoid → Group →
 //! AbelianGroup → Ring → CommutativeRing → IntegralDomain → Field`
-//! 
+//!
 //! There is also the side hierarchy: `Finite → FiniteRing → FiniteField`
 
 use std::ops::{Add, Mul, Neg, Sub};
@@ -30,7 +30,10 @@ pub trait AbelianGroup: Group {}
 ///   - multiplicative Monoid (with One)
 ///   - multiplication distributes over addition
 ///     Distributivity is a semantic contract.
-pub trait Ring: AbelianGroup + Mul<Output = Self> + One {}
+pub trait Ring: AbelianGroup + Mul<Output = Self> + One {
+    /// Returns the characteristic of the ring. Return 0 for infinite characteristic.
+    fn characteristic() -> u64;
+}
 
 /// A Ring whose multiplication is commutative.
 /// Commutativity is a semantic contract.
@@ -50,21 +53,26 @@ pub trait Field: IntegralDomain {
     }
 }
 
+/// The Additive Identity. Should satisfy a + Zero = Zero + a = a.
 pub trait Zero {
     fn zero() -> Self;
     fn is_zero(&self) -> bool;
 }
 
+/// The Multiplicative Identity. Should satisfy a * One = One * a = a
 pub trait One {
     fn one() -> Self;
 }
 
+/// A Finite mathematical structure. Should provide a way to iterate through the elements.
 pub trait Finite: Sized {
     fn enumerate() -> impl Iterator<Item = Self>;
     fn size() -> usize;
 }
+
 pub trait FiniteGroup: Finite + Group {}
 
+/// A Finite Ring. Should provide a way to find invertible elements and iterate through just those.
 pub trait FiniteRing: Finite + Ring {
     fn is_unit(&self) -> bool;
 
@@ -73,6 +81,8 @@ pub trait FiniteRing: Finite + Ring {
     }
 }
 
+/// A Finite Field. Equivalent to a Finite Ring that is a Field. Renames units to multiplicative groups.
+/// Should be a cyclic group.
 pub trait FiniteField: FiniteRing + Field {
     fn multiplicative_group() -> impl Iterator<Item = Self> {
         Self::units()

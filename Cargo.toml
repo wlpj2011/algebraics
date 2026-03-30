@@ -5,3 +5,7 @@ edition = "2024"
 license = "MIT"
 
 [dependencies]
+
+[features]
+default = []
+expensive_tests = []

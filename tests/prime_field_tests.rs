@@ -1,4 +1,4 @@
-use algebraics::prime_field::Fp;
+use algebraics::finite_field::Fp;
 use algebraics::traits::{Field, Finite, FiniteField, One, Zero};
 
 // Edge case worth having for characteristic 2
@@ -59,4 +59,13 @@ fn test_fp53_fermat_little_theorem() {
 fn test_reduction() {
     assert_eq!(Fp::<7>::new(10), Fp::<7>::new(3));
     assert_eq!(Fp::<53>::new(100), Fp::<53>::new(47));
+}
+
+#[test]
+fn test_large_prime_overflow_mul() {
+    const P: u64 = 18_446_744_073_709_551_557; // 2^64 - 59
+    let a = Fp::<P>::new(18_446_744_073_709_551_556);
+    let b = Fp::<P>::new(18_446_744_073_709_551_556);
+    println!("{} * {} = 1", a, b);
+    assert_eq!(a * b, Fp::<P>::one());
 }

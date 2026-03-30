@@ -1,98 +1,192 @@
+use algebraics::finite_field::Fp;
 use algebraics::poly::Poly;
-use algebraics::prime_field::Fp;
-use algebraics::traits::{Field, One, Ring, Zero};
+use algebraics::poly::PolyIter;
+use algebraics::traits::{Finite, One, Zero};
 
-// Test Ring Behaviour
 #[test]
 fn test_poly_fp7_deg2_add_identity() {
-    for coeff0 in 0..7u64 {
-        for coeff1 in 0..7u64 {
-            for coeff2 in 0..7u64 {
-                type CoeffField = Fp<7u64>;
-                let p: Poly<CoeffField> = Poly::new(vec![
-                    CoeffField::new(coeff0),
-                    CoeffField::new(coeff1),
-                    CoeffField::new(coeff2),
-                ]);
-                assert_eq!(p.clone() + Poly::zero(), p);
-            }
-        }
+    type CoeffField = Fp<7u64>;
+    let n = 2;
+    for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+        assert_eq!(p.clone() + Poly::zero(), p);
     }
 }
 
 #[test]
 fn test_poly_fp7_deg2_mul_identity() {
-    for coeff0 in 0..7u64 {
-        for coeff1 in 0..7u64 {
-            for coeff2 in 0..7u64 {
-                type CoeffField = Fp<7u64>;
-                let p: Poly<CoeffField> = Poly::new(vec![
-                    CoeffField::new(coeff0),
-                    CoeffField::new(coeff1),
-                    CoeffField::new(coeff2),
-                ]);
-                assert_eq!(p.clone() * Poly::one(), p);
+    type CoeffField = Fp<7u64>;
+    let n = 2;
+    for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+        assert_eq!(p.clone() * Poly::one(), p);
+    }
+}
+
+#[test]
+fn test_poly_fp7_deg2_additive_inverse() {
+    type CoeffField = Fp<7u64>;
+    let n = 2;
+    for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+        assert_eq!(p.clone() + (-p.clone()), Poly::zero());
+    }
+}
+
+#[test]
+fn test_poly_fp7_deg2_negation_double() {
+    type CoeffField = Fp<7u64>;
+    let n = 2;
+    for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+        assert_eq!(-(-p.clone()), p);
+    }
+}
+
+#[test]
+fn test_poly_fp7_deg2_subtraction() {
+    type CoeffField = Fp<7u64>;
+    let n = 2;
+    for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+        for q in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+            assert_eq!(p.clone() - q.clone(), p.clone() + (-q.clone()));
+        }
+    }
+}
+
+#[test]
+fn test_poly_fp7_deg2_add_commutativity() {
+    type CoeffField = Fp<7u64>;
+    let n = 2;
+    for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+        for q in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+            assert_eq!(p.clone() + q.clone(), q.clone() + p.clone());
+        }
+    }
+}
+
+#[test]
+fn test_poly_fp7_deg1_add_associativity() {
+    type CoeffField = Fp<7u64>;
+    let n = 1;
+    for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+        for q in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+            for r in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+                assert_eq!(
+                    (p.clone() + q.clone()) + r.clone(),
+                    p.clone() + (q.clone() + r.clone())
+                );
             }
         }
     }
 }
 
-// Test degree behavior
 #[test]
-fn test_degree_zero_poly() {
+fn test_poly_fp7_deg1_mul_commutativity() {
+    type CoeffField = Fp<7u64>;
+    let n = 1;
+    for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+        for q in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+            assert_eq!(p.clone() * q.clone(), q.clone() * p.clone());
+        }
+    }
+}
+
+#[test]
+fn test_poly_fp7_deg2_mul_zero() {
+    type CoeffField = Fp<7u64>;
+    let n = 2;
+    for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+        assert_eq!(p.clone() * Poly::zero(), Poly::zero());
+        assert_eq!(Poly::zero() * p.clone(), Poly::zero());
+    }
+}
+
+#[test]
+fn test_poly_fp7_zero_degree() {
     type CoeffField = Fp<7u64>;
     let zero: Poly<CoeffField> = Poly::zero();
     assert!(zero.degree().is_none());
 }
 
 #[test]
-fn test_degree_constant() {
+fn test_poly_fp7_deg0_exact_degree() {
     type CoeffField = Fp<7u64>;
-    for a in 1..7u64 {
-        let p: Poly<CoeffField> = Poly::new(vec![CoeffField::new(a)]);
+    for p in PolyIter::<CoeffField>::all_of_exact_degree(0) {
         assert_eq!(p.degree().unwrap(), 0);
     }
 }
 
-// This only works for Coefficients in a IntegralDomain
 #[test]
-fn test_degree_sum() {
+fn test_poly_fp7_deg1_degree_sum() {
     type CoeffField = Fp<7u64>;
-    for a0 in 0..7u64 {
-        for a1 in 0..7u64 {
-            for b0 in 0..7u64 {
-                for b1 in 0..7u64 {
-                    if (a0, a1) == (0, 0) || (b0, b1) == (0, 0) {
-                        continue;
-                    }
-                    let a: Poly<CoeffField> =
-                        Poly::new(vec![CoeffField::new(a0), CoeffField::new(a1)]);
-                    let b: Poly<CoeffField> =
-                        Poly::new(vec![CoeffField::new(b0), CoeffField::new(b1)]);
-
-                    let sum_deg = (a.clone() + b.clone()).degree();
-                    let max_deg = a.degree().unwrap().max(b.degree().unwrap());
-                    assert!(sum_deg.map_or(true, |d| d <= max_deg));
-                }
+    let n = 1;
+    for p1 in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+        for p2 in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+            if p1 == Poly::zero() || p2 == Poly::zero() {
+                continue;
             }
+            let sum_deg = (p1.clone() + p2.clone()).degree();
+            let max_deg = p1.degree().unwrap().max(p2.degree().unwrap());
+            assert!(sum_deg.map_or(true, |d| d <= max_deg));
         }
     }
 }
 
 #[test]
-fn test_degree_mul() {
-    type F = Fp<7u64>;
-    for a1 in 1..7u64 {
-        for b1 in 1..7u64 {
-            for a0 in 0..7u64 {
-                for b0 in 0..7u64 {
-                    let a = Poly::new(vec![F::new(a0), F::new(a1)]);
-                    let b = Poly::new(vec![F::new(b0), F::new(b1)]);
-                    let prod_deg = (a.clone() * b.clone()).degree().unwrap();
-                    let sum_of_deg = a.degree().unwrap() + b.degree().unwrap();
-                    assert_eq!(prod_deg, sum_of_deg);
-                }
+fn test_poly_fp7_deg1_degree_mul() {
+    type CoeffField = Fp<7u64>;
+    let n = 1;
+    for p1 in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+        for p2 in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
+            if p1 == Poly::zero() || p2 == Poly::zero() {
+                continue;
             }
+            let prod_deg = (p1.clone() * p2.clone()).degree().unwrap();
+            let sum_deg = p1.degree().unwrap() + p2.degree().unwrap();
+            assert_eq!(prod_deg, sum_deg);
         }
+    }
+}
+
+#[test]
+fn test_poly_fp7_deg2_normalize_trailing_zeros() {
+    type CoeffField = Fp<7u64>;
+    let p = Poly::new(vec![
+        CoeffField::zero(),
+        CoeffField::zero(),
+        CoeffField::one(),
+    ]);
+    assert_eq!(p.degree().unwrap(), 2);
+
+    let p2 = Poly::new(vec![
+        CoeffField::zero(),
+        CoeffField::zero(),
+        CoeffField::zero(),
+    ]);
+    assert!(p2.degree().is_none());
+}
+
+#[test]
+fn test_poly_fp7_deg2_iterator_len_tracking() {
+    type CoeffField = Fp<7>;
+    let n = 2;
+    let mut iter = PolyIter::<CoeffField>::all_of_bounded_degree(n);
+
+    let total = CoeffField::size().pow((n + 1) as u32);
+    assert_eq!(iter.len(), total);
+
+    // Consume a few elements
+    iter.next();
+    iter.next();
+    assert_eq!(iter.len(), total - 2);
+
+    // Consume the rest
+    let _ = iter.by_ref().count();
+    assert_eq!(iter.len(), 0);
+}
+
+#[test]
+fn test_poly_fp7_deg1_exact_degree_iterator() {
+    type CoeffField = Fp<7u64>;
+    let n = 1;
+    for p in PolyIter::<CoeffField>::all_of_exact_degree(n) {
+        assert_eq!(p.degree().unwrap(), n);
     }
 }
