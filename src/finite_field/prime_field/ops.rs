@@ -4,14 +4,14 @@ use std::ops::{Add, Mul, Neg, Sub};
 impl<const P: u64> Add for Fp<P> {
     type Output = Self;
     fn add(self, rhs: Self) -> Self::Output {
-        Fp::new((self.value() + rhs.value()) % P)
+        Fp::new(self.value() + rhs.value())
     }
 }
 
 impl<const P: u64> Neg for Fp<P> {
     type Output = Self;
     fn neg(self) -> Self::Output {
-        Fp::new((P - self.value()) % P)
+        Fp::new(P - self.value())
     }
 }
 
