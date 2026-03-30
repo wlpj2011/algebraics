@@ -30,7 +30,6 @@ pub struct Poly<T> {
     coeffs: Vec<T>,
 }
 
-
 impl<T> Poly<T> {
     /// Returns the degree of the polynomial, or `None` if it is the zero polynomial.
     ///

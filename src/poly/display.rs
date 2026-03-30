@@ -21,7 +21,7 @@ use std::fmt::Display;
 /// let zero = Poly::<F>::zero();
 /// assert_eq!(format!("{}", zero), "0");
 /// ```
-impl<T: Clone + Zero + One +  PartialEq + Display> Display for Poly<T> {
+impl<T: Clone + Zero + One + PartialEq + Display> Display for Poly<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self.degree() {
             None => write!(f, "0"),

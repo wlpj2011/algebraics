@@ -1,7 +1,7 @@
 //! Polynomial arithmetic over generic rings and finite fields.
 //!
 //! This module provides:
-//! 
+//!
 //! - **`Poly<T>`** – A polynomial type with coefficients in `T`.
 //!   - Supports addition, subtraction, multiplication, negation.
 //!   - Automatically removes trailing zeros.

@@ -67,7 +67,7 @@ impl<T: Finite + Zero + Clone + PartialEq> PolyIter<T> {
             indices: vec![0; n + 1],
             elements,
             done: false,
-            remaining: total
+            remaining: total,
         }
     }
 
@@ -93,7 +93,6 @@ impl<T: Finite + Clone + Zero + PartialEq> Iterator for PolyIter<T> {
         if self.remaining == 0 {
             self.done = true;
         }
-
 
         // Increment indices
         let mut carry = true;

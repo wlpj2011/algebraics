@@ -1,9 +1,7 @@
 use algebraics::poly::Poly;
 use algebraics::poly::PolyIter;
 use algebraics::prime_field::Fp;
-use algebraics::traits::{Zero, One, Finite};
-
-
+use algebraics::traits::{Finite, One, Zero};
 
 #[test]
 fn test_poly_fp7_deg2_add_identity() {
@@ -70,7 +68,10 @@ fn test_poly_fp7_deg1_add_associativity() {
     for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
         for q in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
             for r in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
-                assert_eq!((p.clone() + q.clone()) + r.clone(), p.clone() + (q.clone() + r.clone()));
+                assert_eq!(
+                    (p.clone() + q.clone()) + r.clone(),
+                    p.clone() + (q.clone() + r.clone())
+                );
             }
         }
     }
@@ -147,10 +148,18 @@ fn test_poly_fp7_deg1_degree_mul() {
 #[test]
 fn test_poly_fp7_deg2_normalize_trailing_zeros() {
     type CoeffField = Fp<7u64>;
-    let p = Poly::new(vec![CoeffField::zero(), CoeffField::zero(), CoeffField::one()]);
+    let p = Poly::new(vec![
+        CoeffField::zero(),
+        CoeffField::zero(),
+        CoeffField::one(),
+    ]);
     assert_eq!(p.degree().unwrap(), 2);
 
-    let p2 = Poly::new(vec![CoeffField::zero(), CoeffField::zero(), CoeffField::zero()]);
+    let p2 = Poly::new(vec![
+        CoeffField::zero(),
+        CoeffField::zero(),
+        CoeffField::zero(),
+    ]);
     assert!(p2.degree().is_none());
 }
 
@@ -161,15 +170,15 @@ fn test_poly_fp7_deg2_iterator_len_tracking() {
     let mut iter = PolyIter::<CoeffField>::all_of_bounded_degree(n);
 
     let total = CoeffField::size().pow((n + 1) as u32);
-    assert_eq!(iter.len(), total); 
+    assert_eq!(iter.len(), total);
 
     // Consume a few elements
     iter.next();
     iter.next();
-    assert_eq!(iter.len(), total - 2); 
+    assert_eq!(iter.len(), total - 2);
 
     // Consume the rest
-    let _ = iter.by_ref().count(); 
+    let _ = iter.by_ref().count();
     assert_eq!(iter.len(), 0);
 }
 
