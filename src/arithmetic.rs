@@ -1,3 +1,7 @@
+// Computes `base^exp mod modulus` using binary exponentiation.
+///
+/// # Panics
+/// Does not panic, but output is unspecified if `modulus == 0`.
 pub const fn mod_pow(mut base: u64, mut exp: u64, modulus: u64) -> u64 {
     let mut result = 1u64;
     base %= modulus;
@@ -11,6 +15,10 @@ pub const fn mod_pow(mut base: u64, mut exp: u64, modulus: u64) -> u64 {
     result
 }
 
+/// Returns `true` if `n` is prime.
+///
+/// Uses a deterministic Miller-Rabin test with witnesses sufficient to
+/// correctly classify all `n < 2^64`.
 pub const fn is_prime(n: u64) -> bool {
     if n < 2 {
         return false;
@@ -53,7 +61,11 @@ pub const fn is_prime(n: u64) -> bool {
     true
 }
 
-pub const fn miller_rabin_check(n: u64, a: u64, d: u64, r: u64) -> bool {
+// Performs one Miller-Rabin witness check for `n`, given witness `a`
+/// and the decomposition `n - 1 = 2^r * d` with `d` odd.
+///
+/// Returns `true` if `a` does not witness compositeness of `n`.
+pub(crate) const fn miller_rabin_check(n: u64, a: u64, d: u64, r: u64) -> bool {
     let mut x = mod_pow(a, d, n);
     if x == 1 || x == n - 1 {
         return true;
