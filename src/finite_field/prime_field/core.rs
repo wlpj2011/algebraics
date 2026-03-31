@@ -3,6 +3,15 @@
 //! There are compile time checks for primality of P.
 use crate::arithmetic::*;
 use crate::traits::*;
+
+/// The prime field `F_p = Z/pZ` for a prime `P`.
+///
+/// Elements are stored as integers in `0..P` and are always reduced on
+/// construction. Primality of `P` is verified at compile time — `Fp<4>`
+/// will not compile.
+///
+/// # Type parameters
+/// - `P`: the field characteristic, which must be prime
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Fp<const P: u64>(u64);
 
