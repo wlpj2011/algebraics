@@ -2,10 +2,8 @@
 //!
 //! The hierarchy follows: `Magma → Semigroup → Monoid → Group →
 //! AbelianGroup → Ring → CommutativeRing → IntegralDomain → Field`
-//!
-//! There is also the side hierarchy: `Finite → FiniteRing → FiniteField`
-
 use std::ops::{Add, Mul, Neg, Sub};
+use crate::traits::*;
 
 /// A set with a closed binary operation (here, addition).
 ///
@@ -81,67 +79,3 @@ pub trait Field: IntegralDomain {
         other.inv().map(|inv| self.clone() * inv)
     }
 }
-
-/// The additive identity element.
-///
-/// # Contract
-/// - **Left identity**: `Zero::zero() + a == a` for all `a`
-/// - **Right identity**: `a + Zero::zero() == a` for all `a`
-/// - **Consistency**: `is_zero()` returns `true` if and only if `self == Zero:
-pub trait Zero {
-    /// Returns the additive identity element.
-    fn zero() -> Self;
-
-    /// Returns `true` if `self` is the additive identity.
-    fn is_zero(&self) -> bool;
-}
-
-/// The multiplicative identity element.
-///
-/// # Contract
-/// - **Left identity**: `One::one() * a == a` for all `a`
-/// - **Right identity**: `a * One::one() == a` for all `a`
-pub trait One {
-    /// Returns the multiplicative identity element.
-    fn one() -> Self;
-}
-
-/// A type with finitely many values, which can be enumerated exhaustively.
-///
-/// # Contract
-/// - **Completeness**: `enumerate()` yields every distinct value exactly once
-/// - **Consistency**: `size()` equals the number of items yielded by `enumerate()`
-pub trait Finite: Sized {
-    /// Returns an iterator over all elements of this type, each exactly once.
-    fn enumerate() -> impl Iterator<Item = Self>;
-
-    /// Returns the total number of distinct elements.
-    fn size() -> usize;
-}
-
-/// A [`Group`] with finitely many elements.
-pub trait FiniteGroup: Finite + Group {}
-
-/// A [`Ring`] with finitely many elements.
-///
-/// Provides enumeration of invertible elements via [`FiniteRing::units`].
-pub trait FiniteRing: Finite + Ring {
-    /// Returns `true` if `self` is a multiplicative unit (has a multiplicative inverse).
-    fn is_unit(&self) -> bool;
-
-    /// Returns an iterator over all multiplicative units.
-    fn units() -> impl Iterator<Item = Self> {
-        Self::enumerate().filter(|x| x.is_unit())
-    }
-}
-
-/// A [`FiniteRing`] that is also a [`Field`].
-///
-/// The multiplicative group of a finite field is cyclic of order `size() - 1`.
-pub trait FiniteField: FiniteRing + Field {
-    /// Returns an iterator over all nonzero elements (the multiplicative group F^×).
-    fn multiplicative_group() -> impl Iterator<Item = Self> {
-        Self::units()
-    }
-}
-impl<T: FiniteRing + Field> FiniteField for T {}
