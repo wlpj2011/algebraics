@@ -1,7 +1,6 @@
 //! Arithmetic operators (`Add`, `Sub`, `Mul`, `Neg`) for `Poly<T>`.
 
-use crate::field::SimpleExtension;
-use crate::poly::Poly;
+use crate::field::FiniteSimpleExtension;
 use crate::traits::*;
 use std::ops::{Add, Mul, Neg, Sub};
 
@@ -10,16 +9,16 @@ use std::ops::{Add, Mul, Neg, Sub};
 /// # Example
 /// ```
 /// ```
-impl<F: Field, M: IrreduciblePoly<F>> Add for &SimpleExtension<F, M> {
-    type Output = SimpleExtension<F, M>;
+impl<F: Field, M: IrreduciblePoly<F>> Add for &FiniteSimpleExtension<F, M> {
+    type Output = FiniteSimpleExtension<F, M>;
 
     fn add(self, rhs: Self) -> Self::Output {
-        todo!()
+        FiniteSimpleExtension::new(&self.repr + &rhs.repr)
     }
 }
 
 /// Adds two polynomials by reference; delegates to `&Poly + &Poly`.
-impl<F: Field, M: IrreduciblePoly<F>> Add for SimpleExtension<F, M> {
+impl<F: Field, M: IrreduciblePoly<F>> Add for FiniteSimpleExtension<F, M> {
     type Output = Self;
     fn add(self, rhs: Self) -> Self {
         &self + &rhs
@@ -31,15 +30,15 @@ impl<F: Field, M: IrreduciblePoly<F>> Add for SimpleExtension<F, M> {
 /// # Example
 /// ```
 /// ```
-impl<F: Field, M: IrreduciblePoly<F>> Neg for &SimpleExtension<F, M> {
-    type Output = SimpleExtension<F, M>;
+impl<F: Field, M: IrreduciblePoly<F>> Neg for &FiniteSimpleExtension<F, M> {
+    type Output = FiniteSimpleExtension<F, M>;
     fn neg(self) -> Self::Output {
-        todo!()
+        FiniteSimpleExtension::new(-&self.repr)
     }
 }
 
 /// Negates a polynomial by reference; delegates to `-&Poly`.
-impl<F: Field, M: IrreduciblePoly<F>> Neg for SimpleExtension<F, M> {
+impl<F: Field, M: IrreduciblePoly<F>> Neg for FiniteSimpleExtension<F, M> {
     type Output = Self;
     fn neg(self) -> Self {
         -&self
@@ -51,15 +50,15 @@ impl<F: Field, M: IrreduciblePoly<F>> Neg for SimpleExtension<F, M> {
 /// # Example
 /// ```
 /// ```
-impl<F: Field, M: IrreduciblePoly<F>> Sub for &SimpleExtension<F, M> {
-    type Output = SimpleExtension<F, M>;
+impl<F: Field, M: IrreduciblePoly<F>> Sub for &FiniteSimpleExtension<F, M> {
+    type Output = FiniteSimpleExtension<F, M>;
     fn sub(self, rhs: Self) -> Self::Output {
         self + &(-rhs)
     }
 }
 
 /// Subtracts two polynomials by reference; delegates to `&Poly - &Poly`.
-impl<F: Field, M: IrreduciblePoly<F>> Sub for SimpleExtension<F, M> {
+impl<F: Field, M: IrreduciblePoly<F>> Sub for FiniteSimpleExtension<F, M> {
     type Output = Self;
     fn sub(self, rhs: Self) -> Self::Output {
         &self + &(-&rhs)
@@ -71,15 +70,15 @@ impl<F: Field, M: IrreduciblePoly<F>> Sub for SimpleExtension<F, M> {
 /// # Example
 /// ```
 /// ```
-impl<F: Field, M: IrreduciblePoly<F>> Mul for &SimpleExtension<F, M> {
-    type Output = SimpleExtension<F, M>;
+impl<F: Field, M: IrreduciblePoly<F>> Mul for &FiniteSimpleExtension<F, M> {
+    type Output = FiniteSimpleExtension<F, M>;
     fn mul(self, rhs: Self) -> Self::Output {
-        todo!()
+        FiniteSimpleExtension::new(&self.repr * &rhs.repr)
     }
 }
 
 /// Multiplies two polynomials by reference; delegates to `&Poly * &Poly`.
-impl<F: Field, M: IrreduciblePoly<F>> Mul for SimpleExtension<F, M> {
+impl<F: Field, M: IrreduciblePoly<F>> Mul for FiniteSimpleExtension<F, M> {
     type Output = Self;
     fn mul(self, rhs: Self) -> Self::Output {
         &self * &rhs

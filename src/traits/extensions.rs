@@ -22,9 +22,6 @@ pub trait FieldExtension: Field {
     type BaseField: Field;
     /// embed a BaseField element in K into E
     fn embed(x: Self::BaseField) -> Self;
-    fn norm(&self) -> Option<Self::BaseField> {
-        None
-    } // default implementation returns None
 }
 
 /// Any finite-degree field extension E/K.
@@ -42,8 +39,13 @@ pub trait FiniteExtension: FieldExtension {
 
 /// Separable finite extension — trace well-defined
 /// and the trace form is non-degenerate.
-/// Only implementing for FiniteExtensions
-pub trait SeparableExtension: FieldExtension {
+/// Trace might not be computatble, so not requiring it
+pub trait SeparableExtension: FieldExtension {}
+
+/// Separable finite extension — trace well-defined
+/// and the trace form is non-degenerate.
+/// Trace is computable as sum of embeddings ffor finite extensions
+pub trait SeparableFiniteExtension: SeparableExtension + FiniteExtension {
     /// Field trace E -> K. trace of multiplication map
     fn trace(&self) -> Self::BaseField;
 }

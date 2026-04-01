@@ -4,39 +4,39 @@ use crate::poly::Poly;
 use crate::traits::*;
 
 #[derive(Debug, Eq)]
-pub struct SimpleExtension<F: Field, M: IrreduciblePoly<F>> {
-    repr: Poly<F>,
+pub struct FiniteSimpleExtension<F: Field, M: IrreduciblePoly<F>> {
+    pub(crate) repr: Poly<F>,
     _m: PhantomData<M>, // M is only used as a const modulus, never stored
 }
 
-impl<F: Field, M: IrreduciblePoly<F>> SimpleExtension<F, M> {
-    fn new(repr: Poly<F>) -> Self {
+impl<F: Field, M: IrreduciblePoly<F>> FiniteSimpleExtension<F, M> {
+    pub fn new(repr: Poly<F>) -> Self {
         let reduced_repr = repr.div_rem(M::modulus()).1;
-        SimpleExtension {
+        FiniteSimpleExtension {
             repr: reduced_repr,
             _m: PhantomData,
         }
     }
 }
 
-impl<F: Field, M: IrreduciblePoly<F>> Clone for SimpleExtension<F, M> {
+impl<F: Field, M: IrreduciblePoly<F>> Clone for FiniteSimpleExtension<F, M> {
     fn clone(&self) -> Self {
-        SimpleExtension {
+        FiniteSimpleExtension {
             repr: self.repr.clone(),
             _m: PhantomData,
         }
     }
 }
 
-impl<F: Field, M: IrreduciblePoly<F>> PartialEq for SimpleExtension<F, M> {
+impl<F: Field, M: IrreduciblePoly<F>> PartialEq for FiniteSimpleExtension<F, M> {
     fn eq(&self, other: &Self) -> bool {
         self.repr == other.repr
     }
 }
 
-impl<F: Field, M: IrreduciblePoly<F>> Zero for SimpleExtension<F, M> {
+impl<F: Field, M: IrreduciblePoly<F>> Zero for FiniteSimpleExtension<F, M> {
     fn zero() -> Self {
-        SimpleExtension {
+        FiniteSimpleExtension {
             repr: Poly::zero(),
             _m: PhantomData,
         }
@@ -47,37 +47,37 @@ impl<F: Field, M: IrreduciblePoly<F>> Zero for SimpleExtension<F, M> {
     }
 }
 
-impl<F: Field, M: IrreduciblePoly<F>> One for SimpleExtension<F, M> {
+impl<F: Field, M: IrreduciblePoly<F>> One for FiniteSimpleExtension<F, M> {
     fn one() -> Self {
-        SimpleExtension {
+        FiniteSimpleExtension {
             repr: Poly::one(),
             _m: PhantomData,
         }
     }
 }
 
-impl<F: Field, M: IrreduciblePoly<F>> Magma for SimpleExtension<F, M> {}
-impl<F: Field, M: IrreduciblePoly<F>> Semigroup for SimpleExtension<F, M> {}
-impl<F: Field, M: IrreduciblePoly<F>> Monoid for SimpleExtension<F, M> {}
-impl<F: Field, M: IrreduciblePoly<F>> Group for SimpleExtension<F, M> {}
-impl<F: Field, M: IrreduciblePoly<F>> AbelianGroup for SimpleExtension<F, M> {}
+impl<F: Field, M: IrreduciblePoly<F>> Magma for FiniteSimpleExtension<F, M> {}
+impl<F: Field, M: IrreduciblePoly<F>> Semigroup for FiniteSimpleExtension<F, M> {}
+impl<F: Field, M: IrreduciblePoly<F>> Monoid for FiniteSimpleExtension<F, M> {}
+impl<F: Field, M: IrreduciblePoly<F>> Group for FiniteSimpleExtension<F, M> {}
+impl<F: Field, M: IrreduciblePoly<F>> AbelianGroup for FiniteSimpleExtension<F, M> {}
 
-impl<F: Field, M: IrreduciblePoly<F>> Ring for SimpleExtension<F, M> {
+impl<F: Field, M: IrreduciblePoly<F>> Ring for FiniteSimpleExtension<F, M> {
     fn characteristic() -> u64 {
         F::characteristic()
     }
 }
 
-impl<F: Field, M: IrreduciblePoly<F>> CommutativeRing for SimpleExtension<F, M> {}
-impl<F: Field, M: IrreduciblePoly<F>> IntegralDomain for SimpleExtension<F, M> {}
+impl<F: Field, M: IrreduciblePoly<F>> CommutativeRing for FiniteSimpleExtension<F, M> {}
+impl<F: Field, M: IrreduciblePoly<F>> IntegralDomain for FiniteSimpleExtension<F, M> {}
 
-impl<F: Field, M: IrreduciblePoly<F>> Field for SimpleExtension<F, M> {
+impl<F: Field, M: IrreduciblePoly<F>> Field for FiniteSimpleExtension<F, M> {
     fn inv(&self) -> Option<Self> {
         todo!()
     }
 }
 
-impl<F: Field, M: IrreduciblePoly<F>> FieldExtension for SimpleExtension<F, M> {
+impl<F: Field, M: IrreduciblePoly<F>> FieldExtension for FiniteSimpleExtension<F, M> {
     type BaseField = F;
 
     fn embed(x: Self::BaseField) -> Self {
@@ -88,9 +88,27 @@ impl<F: Field, M: IrreduciblePoly<F>> FieldExtension for SimpleExtension<F, M> {
     }
 }
 
+impl<F: Field, M: IrreduciblePoly<F>> FiniteExtension for FiniteSimpleExtension<F, M> {
+    fn degree() -> usize {
+        M::degree()
+    }
+
+    fn project_to_base(&self) -> Option<Self::BaseField> {
+        todo!()
+    }
+
+    fn norm(&self) -> Self::BaseField {
+        todo!()
+    }
+}
+
 /// Blanket: any extension of a perfect field is separable.
-impl<F: PerfectField, M: IrreduciblePoly<F>> SeparableExtension for SimpleExtension<F, M> {
-    fn trace(&self) -> F {
+impl<F: PerfectField, M: IrreduciblePoly<F>> SeparableExtension for FiniteSimpleExtension<F, M> {}
+
+impl<F: PerfectField, M: IrreduciblePoly<F>> SeparableFiniteExtension
+    for FiniteSimpleExtension<F, M>
+{
+    fn trace(&self) -> Self::BaseField {
         todo!()
     }
 }
