@@ -36,3 +36,16 @@ impl<const P: u64> Mul for Fp<P> {
         Fp::new(((self.value() as u128 * rhs.value() as u128) % P as u128) as u64)
     }
 }
+
+/// Divides two field elements modulo `P`.
+/// 
+/// # Panics
+/// Panics on division by zero
+impl<const P: u64> Div for Fp<P> {
+    type Output = Self;
+    fn div(self, rhs: Self) -> Self {
+        assert!(!rhs.is_zero(), "Cannot divide by zero");
+        self * rhs.inv().unwrap()
+    }
+}
+
