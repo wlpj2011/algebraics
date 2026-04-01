@@ -73,6 +73,9 @@ impl<const P: u64> Field for Fp<P> {
     }
 }
 
+impl<const P: u64> CharPField for Fp<P> {}
+impl<const P: u64> PerfectField for Fp<P> {}
+
 impl<const P: u64> Fp<P> {
     /// Creates a new element of F_p.
     ///
