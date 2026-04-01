@@ -9,9 +9,19 @@ pub struct SimpleExtension<F: Field, M: IrreduciblePoly<F>> {
     _m: PhantomData<M>, // M is only used as a const modulus, never stored
 }
 
+impl<F: Field, M: IrreduciblePoly<F>> SimpleExtension<F, M> {
+    fn new(repr: Poly<F>) -> Self {
+        let reduced_repr = repr.div_rem(M::modulus()).1;
+        SimpleExtension {
+            repr: reduced_repr,
+            _m: PhantomData,
+        }
+    }
+}
+
 impl<F: Field, M: IrreduciblePoly<F>> Clone for SimpleExtension<F, M> {
     fn clone(&self) -> Self {
-        Self {
+        SimpleExtension {
             repr: self.repr.clone(),
             _m: PhantomData,
         }
@@ -26,17 +36,23 @@ impl<F: Field, M: IrreduciblePoly<F>> PartialEq for SimpleExtension<F, M> {
 
 impl<F: Field, M: IrreduciblePoly<F>> Zero for SimpleExtension<F, M> {
     fn zero() -> Self {
-        todo!()
+        SimpleExtension {
+            repr: Poly::zero(),
+            _m: PhantomData,
+        }
     }
 
     fn is_zero(&self) -> bool {
-        todo!()
+        self.repr.is_zero()
     }
 }
 
 impl<F: Field, M: IrreduciblePoly<F>> One for SimpleExtension<F, M> {
     fn one() -> Self {
-        todo!()
+        SimpleExtension {
+            repr: Poly::one(),
+            _m: PhantomData,
+        }
     }
 }
 
@@ -48,7 +64,7 @@ impl<F: Field, M: IrreduciblePoly<F>> AbelianGroup for SimpleExtension<F, M> {}
 
 impl<F: Field, M: IrreduciblePoly<F>> Ring for SimpleExtension<F, M> {
     fn characteristic() -> u64 {
-        todo!()
+        F::characteristic()
     }
 }
 
