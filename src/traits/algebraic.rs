@@ -65,6 +65,34 @@ pub trait CommutativeRing: Ring {}
 ///   or `b == Zero::zero()`
 pub trait IntegralDomain: CommutativeRing {}
 
+
+/// A [`IntegralDomain`] with a Euclidean Function
+/// This allows a well-defined division algorithm and gcd
+/// Note that gcds can be defined far more generally than this!
+/// # Contract
+/// - There exists a Euclidean function `f` such that for `a`, `b` in the Domain, `b` non-zero
+///   then there exits `q` and `r` in the domain with `a = b * q + r` and either `r == Zero::zero()` or `f(r) < f(b)`.
+/// - For the above, we have `(q, r) = div_rem(a, b)`.
+/// - Note that `f` does not need to be stated anywhere, the particular `f` is not important, just that div_rem returns as above.
+pub trait EuclideanDomain: IntegralDomain {
+    /// # Panics
+    /// Panics if `other` is zero — this is a programmer error, not a
+    /// recoverable condition. Check before calling.
+    fn div_rem(self, other: Self) -> (Self, Self);
+
+    fn gcd(mut a: Self, mut b: Self) -> Self
+    where Self: Zero
+    {
+        // guard: gcd(0,0) is undefined
+        while !b.is_zero() {
+            let (_, r) = a.div_rem(b.clone());
+            a = b;
+            b = r;
+        }
+        a
+    }
+}
+
 /// An [`IntegralDomain`] where every nonzero element has a multiplicative inverse.
 ///
 /// # Contract
@@ -77,5 +105,12 @@ pub trait Field: IntegralDomain {
     /// Divides `self` by `other`. Returns `None` if `other` is zero.
     fn div(&self, other: &Self) -> Option<Self> {
         other.inv().map(|inv| self.clone() * inv)
+    }
+}
+
+/// All [`Field`] are trivially [`EuclideanDomain`]
+impl<T: Field> EuclideanDomain for T {
+    fn div_rem(self, other: Self) -> (Self, Self) {
+        (self * other.inv().unwrap(), Self::zero())
     }
 }
