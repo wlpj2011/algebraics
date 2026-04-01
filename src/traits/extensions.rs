@@ -37,8 +37,8 @@ pub trait FiniteExtension: FieldExtension {
     fn norm(&self) -> Self::BaseField;
 }
 
-/// Separable finite extension — trace well-defined
-/// and the trace form is non-degenerate.
+/// Separable finite extension — trace possibly well-defined
+/// and the trace form is non-degenerate if defined.
 /// Trace might not be computatble, so not requiring it
 pub trait SeparableExtension: FieldExtension {}
 
@@ -51,7 +51,7 @@ pub trait SeparableFiniteExtension: SeparableExtension + FiniteExtension {
 }
 
 /// Char-p extension. Frobenius only exists here.
-pub trait CharPExtension: FiniteExtension + CharPField {
+pub trait CharPFiniteExtension: FiniteExtension + CharPField {
     fn frobenius(&self) -> Self;
 
     fn frobenius_iter(&self, k: usize) -> Self {
@@ -63,12 +63,12 @@ pub trait CharPExtension: FiniteExtension + CharPField {
     }
 }
 
-/// Separable char-p extension. Trace has an efficient Frobenius-based formula.
-pub trait SeparableCharPExtension: CharPExtension + SeparableExtension {
+/// Separable char-p extension of finite degree. Trace has an efficient Frobenius-based formula.
+pub trait SeparableCharPFiniteExtension: CharPFiniteExtension + SeparableFiniteExtension {
     fn trace_via_frobenius(&self) -> Self::BaseField {
         todo!()
     }
 }
 
-/// Finite field extension.
-pub trait FiniteFieldExtension: SeparableCharPExtension + FiniteField {}
+// Finite field extension.
+// pub trait FiniteFieldExtension: SeparableCharPExtension + FiniteField {}

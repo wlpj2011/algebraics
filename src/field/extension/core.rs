@@ -94,7 +94,17 @@ impl<F: Field, M: IrreduciblePoly<F>> FiniteExtension for FiniteSimpleExtension<
     }
 
     fn project_to_base(&self) -> Option<Self::BaseField> {
-        todo!()
+        let repr_degree = self.repr.degree();
+        match repr_degree {
+            None => Some(Self::BaseField::zero()),
+            Some(repr_degree) => {
+                if repr_degree > 1 {
+                    return None;
+                } else {
+                    return Some(self.repr.coeff(1));
+                }
+            }
+        }
     }
 
     fn norm(&self) -> Self::BaseField {
