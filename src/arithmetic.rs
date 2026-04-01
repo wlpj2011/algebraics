@@ -61,7 +61,7 @@ pub const fn is_prime(n: u64) -> bool {
     true
 }
 
-// Performs one Miller-Rabin witness check for `n`, given witness `a`
+/// Performs one Miller-Rabin witness check for `n`, given witness `a`
 /// and the decomposition `n - 1 = 2^r * d` with `d` odd.
 ///
 /// Returns `true` if `a` does not witness compositeness of `n`.

@@ -1,3 +1,4 @@
+//! Display formatting for `Fp<P>`.
 use super::core::Fp;
 use std::fmt::Display;
 

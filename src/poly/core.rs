@@ -3,8 +3,9 @@ use crate::traits::*;
 /// A polynomial with coefficients in an algebraic ring.
 ///
 /// # Type parameters
-/// - `T`: the coefficient type. `T` must implement the `Ring` trait (or at least `Zero` + `PartialEq`
-///   for construction and normalization). Many operations require `T: Ring` or stronger.
+/// - `T`: the coefficient type. `T: Zero + PartialEq` necessary
+///   for construction and normalization. 
+/// - Most operations require `T: Ring` or stronger.
 ///
 /// # Representation
 /// Internally, polynomials are stored as a `Vec<T>` of coefficients in increasing degree order:

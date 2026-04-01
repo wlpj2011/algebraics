@@ -61,6 +61,7 @@ The trait hierarchy is in place, running from `Magma` through `Field`, with supp
 The prime field $\mathbb{F}_p$, implemented as `Fp<const P: u64>`, is complete. Primality of `P` is checked at compile time via a `const` assertion, so instantiation with a composite modulus is a compile error. Multiplicative inversion uses Fermat's little theorem. The full test suite covers additive and multiplicative axioms exhaustively over small fields, and Fermat's little theorem over a larger prime.
 
 The polynomial ring `Poly<T: Ring>` is implemented, with addition, subtraction, multiplication, and negation. Normalization (removal of leading zero coefficients) is handled on construction. Tests cover the ring axioms and degree behavior over $\mathbb{F}_7$.
+`PolyIter<T: FiniteRing>` allows easy iteration over all polynomials of given or bounded degree.
 
 See the issue tracker for known bugs and planned features.
 
