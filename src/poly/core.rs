@@ -108,6 +108,10 @@ impl<T: Zero + PartialEq> Poly<T> {
             coeffs: Self::normalize(coeffs),
         }
     }
+
+    pub fn new_constant(coeff: T) -> Self {
+        Self::new(vec![coeff])
+    }
 }
 
 impl<T: Zero> Zero for Poly<T> {

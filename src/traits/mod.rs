@@ -3,7 +3,9 @@
 mod algebraic;
 mod finite;
 mod identity;
+mod extensions;
 
 pub use algebraic::*;
 pub use finite::*;
 pub use identity::*;
+pub use extensions::*;

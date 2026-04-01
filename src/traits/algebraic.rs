@@ -113,3 +113,19 @@ impl<T: Field> EuclideanDomain for T {
         (self * other.inv().unwrap(), Self::zero())
     }
 }
+
+/// A [`Ring`] of finite characteristic. 
+/// Specifically characteristic()  ≠ 0. 
+/// A marker trait to make simple and separable extensions easier.
+pub trait CharPField: Field {}
+
+/// A [`Field`] of finite characteristic. 
+/// Specifically characteristic() == 0. 
+/// A marker trait to make simple and separable extensions easier.
+pub trait Char0Field: Field {}
+
+/// A [`Field`] where every algebraic extension is automatically separable.
+/// Char 0 fields and finite fields are perfect.
+// Can't use blanket impl for FiniteField because Rust doesn't realize Char0Field and FiniteField are disjoint
+pub trait PerfectField: Field {}
+impl<T: Char0Field> PerfectField for T {}
