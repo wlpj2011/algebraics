@@ -32,6 +32,7 @@ pub mod iter;
 
 mod display;
 mod ops;
+mod euclidean;
 
 pub use core::Poly;
 pub use iter::PolyIter;

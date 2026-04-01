@@ -1,6 +1,7 @@
 use algebraics::finite_field::Fp;
 use algebraics::poly::Poly;
 use algebraics::poly::PolyIter;
+use algebraics::traits::EuclideanDomain;
 use algebraics::traits::{Finite, One, Zero};
 
 #[test]
@@ -188,5 +189,36 @@ fn test_poly_fp7_deg1_exact_degree_iterator() {
     let n = 1;
     for p in PolyIter::<CoeffField>::all_of_exact_degree(n) {
         assert_eq!(p.degree().unwrap(), n);
+    }
+}
+
+#[test]
+fn test_poly_fp5_div_rem() {
+    type CoeffField = Fp<5u64>;
+    let f = Poly::new(vec![CoeffField::new(1), CoeffField::new(3), CoeffField::new(4), CoeffField::new(2)]); // Creates 1 + 3*x + 4*x^2 + 2*x^3
+    let g = Poly::new(vec![CoeffField::new(2), CoeffField::new(1)]);
+    let (q,r) = f.div_rem(g);
+    assert_eq!((q,r), (Poly::new(vec![CoeffField::new(3), CoeffField::zero(), CoeffField::new(2)]), Poly::zero()));
+}
+
+#[test]
+fn test_poly_fp7_div_rem_all_bounded() {
+    type F = Fp<7u64>;
+
+    for f in PolyIter::<F>::all_of_bounded_degree(3) {
+        for g in PolyIter::<F>::all_of_bounded_degree(2) {
+            if g.is_zero() { continue; }
+
+            let (q, r) = f.clone().div_rem(g.clone());
+
+            // Reconstruct f from quotient and remainder
+            let reconstructed = &(&q * &g) + &r;
+            assert_eq!(reconstructed, f, "Failed for f={:?}, g={:?}", f, g);
+
+            // Check remainder degree
+            if !r.is_zero() {
+                assert!(r.degree().unwrap() < g.degree().unwrap());
+            }
+        }
     }
 }

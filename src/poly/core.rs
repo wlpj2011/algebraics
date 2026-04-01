@@ -64,6 +64,21 @@ impl<T> Poly<T> {
     {
         self.coeffs.get(i).cloned().unwrap_or(T::zero())
     }
+    /// Returns the coefficient of x^i.
+    ///
+    /// If `i` is greater than the polynomial's degree, returns `T::zero()`.
+    ///
+    /// This is a `pub(crate)` method intended for use within the `poly` module (e.g., for
+    /// arithmetic operations or display formatting).
+    pub(crate) fn lead_coeff(&self) -> T
+    where T: Clone + Zero {
+        let degree = self.degree();
+        match degree {
+            None => T::zero(),
+            Some(degree) => self.coeffs.get(degree).cloned().unwrap(),
+        }
+        
+    }
 }
 
 impl<T: Zero + PartialEq> Poly<T> {
