@@ -1,12 +1,12 @@
 use std::marker::PhantomData;
 
-use crate::traits::*;
 use crate::poly::Poly;
+use crate::traits::*;
 
 #[derive(Debug, Eq)]
 pub struct SimpleExtension<F: Field, M: IrreduciblePoly<F>> {
     repr: Poly<F>,
-    _m: PhantomData<M>,   // M is only used as a const modulus, never stored
+    _m: PhantomData<M>, // M is only used as a const modulus, never stored
 }
 
 impl<F: Field, M: IrreduciblePoly<F>> Clone for SimpleExtension<F, M> {
@@ -61,18 +61,20 @@ impl<F: Field, M: IrreduciblePoly<F>> Field for SimpleExtension<F, M> {
     }
 }
 
-impl<F: Field, M: IrreduciblePoly<F>> FieldExtension for SimpleExtension<F,M> {
+impl<F: Field, M: IrreduciblePoly<F>> FieldExtension for SimpleExtension<F, M> {
     type BaseField = F;
 
     fn embed(x: Self::BaseField) -> Self {
-        Self{repr: Poly::new_constant(x), _m: PhantomData}
+        Self {
+            repr: Poly::new_constant(x),
+            _m: PhantomData,
+        }
     }
 }
 
-
 /// Blanket: any extension of a perfect field is separable.
-impl<F: PerfectField, M: IrreduciblePoly<F>> SeparableExtension
-    for SimpleExtension<F, M>
-{
-    fn trace(&self) -> F { todo!() }
+impl<F: PerfectField, M: IrreduciblePoly<F>> SeparableExtension for SimpleExtension<F, M> {
+    fn trace(&self) -> F {
+        todo!()
+    }
 }

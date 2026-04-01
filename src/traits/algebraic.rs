@@ -114,13 +114,13 @@ impl<T: Field> EuclideanDomain for T {
     }
 }
 
-/// A [`Ring`] of finite characteristic. 
-/// Specifically characteristic()  ≠ 0. 
+/// A [`Ring`] of finite characteristic.
+/// Specifically characteristic()  ≠ 0.
 /// A marker trait to make simple and separable extensions easier.
 pub trait CharPField: Field {}
 
-/// A [`Field`] of finite characteristic. 
-/// Specifically characteristic() == 0. 
+/// A [`Field`] of finite characteristic.
+/// Specifically characteristic() == 0.
 /// A marker trait to make simple and separable extensions easier.
 pub trait Char0Field: Field {}
 

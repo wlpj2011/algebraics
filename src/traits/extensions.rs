@@ -1,16 +1,18 @@
 //! Traits relating to defining extensions of fields.
 //! Includes traits for IrreduciblePoly used for doing arithmetic with extensions
 
-use crate::traits::*;
 use crate::poly::Poly;
+use crate::traits::*;
 
 /// Marker trait for irrreducibly poly
-/// 
+///
 /// # Contract
 /// modulus() must be an irreducible polynomial over F
 pub trait IrreduciblePoly<F: Field> {
     fn modulus() -> Poly<F>;
-    fn degree() -> usize { Self::modulus().degree().unwrap() }
+    fn degree() -> usize {
+        Self::modulus().degree().unwrap()
+    }
 }
 
 /// A fully generic field extension E/K
@@ -20,7 +22,9 @@ pub trait FieldExtension: Field {
     type BaseField: Field;
     /// embed a BaseField element in K into E
     fn embed(x: Self::BaseField) -> Self;
-    fn norm(&self) -> Option<Self::BaseField> { None }  // default implementation returns None
+    fn norm(&self) -> Option<Self::BaseField> {
+        None
+    } // default implementation returns None
 }
 
 /// Any finite-degree field extension E/K.
@@ -28,7 +32,7 @@ pub trait FieldExtension: Field {
 /// Does NOT include infinite extensions — degree() returning usize
 /// encodes finiteness by construction.
 pub trait FiniteExtension: FieldExtension {
-    /// Degree [E:K]
+    /// Degree \[E:K\]
     fn degree() -> usize;
     /// Project element to base if possible (identity for trivial extensions)
     fn project_to_base(&self) -> Option<Self::BaseField>;
@@ -44,15 +48,15 @@ pub trait SeparableExtension: FieldExtension {
     fn trace(&self) -> Self::BaseField;
 }
 
-
-
 /// Char-p extension. Frobenius only exists here.
 pub trait CharPExtension: FiniteExtension + CharPField {
     fn frobenius(&self) -> Self;
 
     fn frobenius_iter(&self, k: usize) -> Self {
         let mut result = self.clone();
-        for _ in 0..k { result = result.frobenius(); }
+        for _ in 0..k {
+            result = result.frobenius();
+        }
         result
     }
 }
