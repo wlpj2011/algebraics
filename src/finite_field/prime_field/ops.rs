@@ -1,5 +1,7 @@
+use crate::traits::{Field, Zero};
+
 use super::core::Fp;
-use std::ops::{Add, Mul, Neg, Sub};
+use std::ops::{Add, Mul, Neg, Sub, Div};
 
 /// Adds two field elements, reducing modulo `P`.
 impl<const P: u64> Add for Fp<P> {
