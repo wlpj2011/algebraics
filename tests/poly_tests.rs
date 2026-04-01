@@ -195,10 +195,25 @@ fn test_poly_fp7_deg1_exact_degree_iterator() {
 #[test]
 fn test_poly_fp5_div_rem() {
     type CoeffField = Fp<5u64>;
-    let f = Poly::new(vec![CoeffField::new(1), CoeffField::new(3), CoeffField::new(4), CoeffField::new(2)]); // Creates 1 + 3*x + 4*x^2 + 2*x^3
+    let f = Poly::new(vec![
+        CoeffField::new(1),
+        CoeffField::new(3),
+        CoeffField::new(4),
+        CoeffField::new(2),
+    ]); // Creates 1 + 3*x + 4*x^2 + 2*x^3
     let g = Poly::new(vec![CoeffField::new(2), CoeffField::new(1)]);
-    let (q,r) = f.div_rem(g);
-    assert_eq!((q,r), (Poly::new(vec![CoeffField::new(3), CoeffField::zero(), CoeffField::new(2)]), Poly::zero()));
+    let (q, r) = f.div_rem(g);
+    assert_eq!(
+        (q, r),
+        (
+            Poly::new(vec![
+                CoeffField::new(3),
+                CoeffField::zero(),
+                CoeffField::new(2)
+            ]),
+            Poly::zero()
+        )
+    );
 }
 
 #[test]
@@ -207,7 +222,9 @@ fn test_poly_fp7_div_rem_all_bounded() {
 
     for f in PolyIter::<F>::all_of_bounded_degree(3) {
         for g in PolyIter::<F>::all_of_bounded_degree(2) {
-            if g.is_zero() { continue; }
+            if g.is_zero() {
+                continue;
+            }
 
             let (q, r) = f.clone().div_rem(g.clone());
 

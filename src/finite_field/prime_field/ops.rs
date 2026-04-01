@@ -1,7 +1,7 @@
 use crate::traits::{Field, Zero};
 
 use super::core::Fp;
-use std::ops::{Add, Mul, Neg, Sub, Div};
+use std::ops::{Add, Div, Mul, Neg, Sub};
 
 /// Adds two field elements, reducing modulo `P`.
 impl<const P: u64> Add for Fp<P> {
@@ -40,7 +40,7 @@ impl<const P: u64> Mul for Fp<P> {
 }
 
 /// Divides two field elements modulo `P`.
-/// 
+///
 /// # Panics
 /// Panics on division by zero
 impl<const P: u64> Div for Fp<P> {
@@ -50,4 +50,3 @@ impl<const P: u64> Div for Fp<P> {
         self * rhs.inv().unwrap()
     }
 }
-

@@ -3,7 +3,7 @@ use super::core::Poly;
 use crate::traits::*;
 
 /// Implements polynomial division for polynomials over fields
-/// 
+///
 /// # Panics
 /// Panics on division by zero
 impl<T: Field> EuclideanDomain for Poly<T> {
@@ -15,7 +15,7 @@ impl<T: Field> EuclideanDomain for Poly<T> {
         let mut quotient = Poly::<T>::zero();
         let mut remainder = self.clone();
 
-        while !remainder.is_zero() && remainder.degree() >= denominator.degree(){
+        while !remainder.is_zero() && remainder.degree() >= denominator.degree() {
             let tmp_coeff = remainder.lead_coeff() * denominator.lead_coeff().inv().unwrap();
             let tmp_degree = remainder.degree().unwrap() - denominator.degree().unwrap(); //  Guaranteed non-negative
             let mut tmp_coeffs = vec![T::zero(); tmp_degree];

@@ -4,7 +4,7 @@ use crate::traits::*;
 ///
 /// # Type parameters
 /// - `T`: the coefficient type. `T: Zero + PartialEq` necessary
-///   for construction and normalization. 
+///   for construction and normalization.
 /// - Most operations require `T: Ring` or stronger.
 ///
 /// # Representation
@@ -71,13 +71,14 @@ impl<T> Poly<T> {
     /// This is a `pub(crate)` method intended for use within the `poly` module (e.g., for
     /// arithmetic operations or display formatting).
     pub(crate) fn lead_coeff(&self) -> T
-    where T: Clone + Zero {
+    where
+        T: Clone + Zero,
+    {
         let degree = self.degree();
         match degree {
             None => T::zero(),
             Some(degree) => self.coeffs.get(degree).cloned().unwrap(),
         }
-        
     }
 }
 

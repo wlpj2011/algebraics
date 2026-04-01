@@ -2,8 +2,8 @@
 //!
 //! The hierarchy follows: `Magma → Semigroup → Monoid → Group →
 //! AbelianGroup → Ring → CommutativeRing → IntegralDomain → Field`
-use std::ops::{Add, Mul, Neg, Sub};
 use crate::traits::*;
+use std::ops::{Add, Mul, Neg, Sub};
 
 /// A set with a closed binary operation (here, addition).
 ///
@@ -47,10 +47,9 @@ pub trait AbelianGroup: Group {}
 /// - **Characteristic**: `characteristic()` returns the smallest `n > 0` such that
 ///   `n · 1 == 0`, or `0` if no such `n` exists
 pub trait Ring: AbelianGroup + Mul<Output = Self> + One {
-   /// Returns the characteristic of the ring, or `0` for characteristic zero.
+    /// Returns the characteristic of the ring, or `0` for characteristic zero.
     fn characteristic() -> u64;
 }
-
 
 /// A [`Ring`] whose multiplication is commutative.
 ///
@@ -64,7 +63,6 @@ pub trait CommutativeRing: Ring {}
 /// - **No zero divisors**: `a * b == Zero::zero()` implies `a == Zero::zero()`
 ///   or `b == Zero::zero()`
 pub trait IntegralDomain: CommutativeRing {}
-
 
 /// A [`IntegralDomain`] with a Euclidean Function
 /// This allows a well-defined division algorithm and gcd
@@ -81,7 +79,8 @@ pub trait EuclideanDomain: IntegralDomain {
     fn div_rem(self, other: Self) -> (Self, Self);
 
     fn gcd(mut a: Self, mut b: Self) -> Self
-    where Self: Zero
+    where
+        Self: Zero,
     {
         // guard: gcd(0,0) is undefined
         while !b.is_zero() {
