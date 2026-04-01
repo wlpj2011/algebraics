@@ -1,4 +1,4 @@
-use algebraics::finite_field::Fp;
+use algebraics::field::Fp;
 use algebraics::poly::Poly;
 use algebraics::poly::PolyIter;
 use algebraics::traits::EuclideanDomain;

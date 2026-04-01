@@ -51,7 +51,7 @@ impl<const P: u64> Field for Fp<P> {
     ///
     /// non-zero elements return Some(inverse)
     /// ```
-    /// # use algebraics::finite_field::Fp;
+    /// # use algebraics::field::Fp;
     /// # use algebraics::traits::Field;
     /// let a = Fp::<7>::new(3);
     /// assert_eq!(a.inv(), Some(Fp::<7>::new(5))); // 3 * 5 = 1 mod 7
@@ -59,7 +59,7 @@ impl<const P: u64> Field for Fp<P> {
     ///
     /// 0 has no inverse and returns None
     ///  ```
-    /// # use algebraics::finite_field::Fp;
+    /// # use algebraics::field::Fp;
     /// # use algebraics::traits::Field;
     /// let a = Fp::<7>::new(0);
     /// assert_eq!(a.inv(), None); // 3 * 5 = 1 mod 7
@@ -78,13 +78,13 @@ impl<const P: u64> Fp<P> {
     ///
     /// # Examples
     /// ```
-    /// # use algebraics::finite_field::Fp;
+    /// # use algebraics::field::Fp;
     /// let a = Fp::<7>::new(10);  // reduces to 3
     /// assert_eq!(a, Fp::<7>::new(3));
     /// ```
     /// This panics because 4 is not prime:
     /// ```compile_fail
-    /// # use algebraics::finite_field::Fp;
+    /// # use algebraics::field::Fp;
     /// let a = Fp::<4>::new(1);  // compile-time assert fires
     /// ```
     pub fn new(n: u64) -> Self {

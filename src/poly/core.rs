@@ -18,7 +18,7 @@ use crate::traits::*;
 /// ```
 /// # use algebraics::poly::Poly;
 /// # use algebraics::traits::{Zero, One};
-/// # type F = algebraics::finite_field::Fp<7>;
+/// # type F = algebraics::field::Fp<7>;
 ///
 /// let p = Poly::<F>::new(vec![F::one(), F::zero(), F::one()]); // 1 + x^2
 /// assert_eq!(p.degree(), Some(2));
@@ -38,7 +38,7 @@ impl<T> Poly<T> {
     /// ```
     /// # use algebraics::poly::Poly;
     /// # use algebraics::traits::{Zero, One};
-    /// type F = algebraics::finite_field::Fp<7>;
+    /// type F = algebraics::field::Fp<7>;
     /// let p = Poly::<F>::new(vec![F::one(), F::zero(), F::one()]);
     /// assert_eq!(p.degree(), Some(2));
     /// let zero = Poly::<F>::zero();
@@ -100,7 +100,7 @@ impl<T: Zero + PartialEq> Poly<T> {
     /// ```
     /// # use algebraics::poly::Poly;
     /// # use algebraics::traits::{Zero, One};
-    /// type F = algebraics::finite_field::Fp<7>;
+    /// type F = algebraics::field::Fp<7>;
     /// let p = Poly::<F>::new(vec![F::one(), F::zero(), F::one()]);
     /// ```
     pub fn new(coeffs: Vec<T>) -> Self {
