@@ -3,7 +3,6 @@ use std::marker::PhantomData;
 use crate::poly::Poly;
 use crate::traits::*;
 
-#[derive(Debug, Eq)]
 pub struct FiniteSimpleExtension<F: Field, M: IrreduciblePoly<F>> {
     pub(crate) repr: Poly<F>,
     _m: PhantomData<M>, // M is only used as a const modulus, never stored
@@ -11,6 +10,15 @@ pub struct FiniteSimpleExtension<F: Field, M: IrreduciblePoly<F>> {
 
 impl<F: Field, M: IrreduciblePoly<F>> FiniteSimpleExtension<F, M> {
     pub fn new(repr: Poly<F>) -> Self {
+        let reduced_repr = repr.div_rem(M::modulus()).1;
+        FiniteSimpleExtension {
+            repr: reduced_repr,
+            _m: PhantomData,
+        }
+    }
+
+    pub fn generator() -> Self {
+        let repr = Poly::new(vec![F::zero(), F::one()]);
         let reduced_repr = repr.div_rem(M::modulus()).1;
         FiniteSimpleExtension {
             repr: reduced_repr,
@@ -31,6 +39,16 @@ impl<F: Field, M: IrreduciblePoly<F>> Clone for FiniteSimpleExtension<F, M> {
 impl<F: Field, M: IrreduciblePoly<F>> PartialEq for FiniteSimpleExtension<F, M> {
     fn eq(&self, other: &Self) -> bool {
         self.repr == other.repr
+    }
+}
+
+impl<F: Field, M: IrreduciblePoly<F>> Eq for FiniteSimpleExtension<F, M> {}
+
+impl<F: Field + std::fmt::Debug, M: IrreduciblePoly<F>> std::fmt::Debug
+    for FiniteSimpleExtension<F, M>
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self.repr)
     }
 }
 
@@ -98,10 +116,10 @@ impl<F: Field, M: IrreduciblePoly<F>> FiniteExtension for FiniteSimpleExtension<
         match repr_degree {
             None => Some(Self::BaseField::zero()),
             Some(repr_degree) => {
-                if repr_degree > 1 {
-                    return None;
+                if repr_degree >= 1 {
+                    None
                 } else {
-                    return Some(self.repr.coeff(1));
+                    Some(self.repr.coeff(0))
                 }
             }
         }
