@@ -245,7 +245,7 @@ impl<F: PerfectField + CharPField, M: IrreduciblePoly<F>> CharPFiniteExtension
     for FiniteSimpleExtension<F, M>
 {
     fn frobenius(&self) -> Self {
-        let p = Self::degree();
+        let p = Self::characteristic();
         let x = self.clone();
         let mut result = self.clone();
         for _ in 1..p {
