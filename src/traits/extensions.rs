@@ -74,7 +74,7 @@ pub trait IrreduciblePoly<F: Field> {
 pub trait FieldExtension: Field {
     /// The base field K.
     type BaseField: Field;
-    /// Embeds a base field element into the extension as a constant.
+    /// Embeds a base field element into the extension as a constant with that value.
     fn embed(x: Self::BaseField) -> Self;
 }
 
@@ -163,7 +163,7 @@ pub trait CharPFiniteExtension: FiniteExtension + CharPField {
 /// Gauss sum computations via the Gross–Koblitz formula.
 ///
 /// # Contract
-/// All contracts of [`CharPExtension`] and [`SeparableFiniteExtension`] apply.
+/// All contracts of [`CharPFiniteExtension`] and [`SeparableFiniteExtension`] apply.
 /// `trace_via_frobenius(self)` must agree with `trace(self)` on all elements.
 pub trait SeparableCharPFiniteExtension: CharPFiniteExtension + SeparableFiniteExtension {
     /// Computes Tr_{E/K}(self) as the sum of the Frobenius orbit.
