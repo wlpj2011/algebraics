@@ -11,11 +11,8 @@
 //! Frobenius (squaring in char 2):   0↦0,  1↦1,  α↦α+1,  α+1↦α
 //! Trace (Tr = id + Frob):           Tr(0)=0,  Tr(1)=0,  Tr(α)=1,  Tr(α+1)=1
 //! Norm (N = id · Frob):             N(0)=0,   N(1)=1,   N(α)=1,   N(α+1)=1
-//!
-//! Note: `FiniteExtension::norm` and `FieldExtension::norm` share a name but differ
-//! in return type. All norm calls below use UFCS to avoid ambiguity.
 
-use algebraics::field::{Fp, FiniteSimpleExtension};
+use algebraics::field::{FiniteSimpleExtension, Fp};
 use algebraics::poly::Poly;
 use algebraics::traits::*;
 

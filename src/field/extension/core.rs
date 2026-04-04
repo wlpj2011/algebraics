@@ -142,7 +142,11 @@ impl<F: Field, M: IrreduciblePoly<F>> IntegralDomain for FiniteSimpleExtension<F
 
 impl<F: Field, M: IrreduciblePoly<F>> Field for FiniteSimpleExtension<F, M> {
     fn inv(&self) -> Option<Self> {
-        todo!()
+        if self.is_zero() {
+            return None;
+        }
+        let (_, u, _) = Poly::ext_gcd(self.repr.clone(), M::modulus());
+        Some(Self::new(u))
     }
 }
 
