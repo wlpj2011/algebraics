@@ -1,9 +1,6 @@
 use crate::traits::Field;
 
-pub(crate) fn determinant<F: Field>(mut mat: Vec<Vec<F>>) -> F
-where
-    F: Field,
-{
+pub(crate) fn determinant<F: Field>(mut mat: Vec<Vec<F>>) -> F {
     let n = mat.len();
     let mut det = F::one();
 
