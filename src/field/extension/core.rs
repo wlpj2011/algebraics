@@ -38,7 +38,7 @@
 use std::fmt::Display;
 use std::marker::PhantomData;
 
-use crate::matrix_arithemetic::determinant;
+use crate::matrix_arithmetic::determinant;
 use crate::poly::Poly;
 use crate::traits::*;
 

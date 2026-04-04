@@ -10,5 +10,5 @@ pub mod traits;
 
 pub mod arithmetic;
 pub mod field;
-pub mod matrix_arithemetic;
+pub mod matrix_arithmetic;
 pub mod poly;
