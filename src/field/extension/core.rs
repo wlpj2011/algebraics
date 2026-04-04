@@ -77,6 +77,21 @@ impl<F: Field, M: IrreduciblePoly<F>> FiniteSimpleExtension<F, M> {
             _m: PhantomData,
         }
     }
+
+    pub (crate) fn multiplication_matrix(&self) -> Vec<Vec<F>> {
+    let n = M::degree();
+    let mut cols = Vec::with_capacity(n);
+    let mut basis_elem = Self::one(); // α^0 = 1
+    let generator = Self::generator();
+    for _ in 0..n {
+        let product = self.clone() * basis_elem.clone();
+        // coefficients of product give the column, padding with zeros if needed
+        let col: Vec<F> = (0..n).map(|i| product.repr.coeff(i)).collect();
+        cols.push(col);
+        basis_elem = basis_elem * generator.clone();
+    }
+    cols // cols[k][i] is the (i,k) entry of the matrix
+}
 }
 
 impl<F: Field, M: IrreduciblePoly<F>> Clone for FiniteSimpleExtension<F, M> {
@@ -104,9 +119,7 @@ impl<F: Field + std::fmt::Debug, M: IrreduciblePoly<F>> std::fmt::Debug
     }
 }
 
-impl<F: Field + Display, M: IrreduciblePoly<F>> Display
-    for FiniteSimpleExtension<F, M>
-{
+impl<F: Field + Display, M: IrreduciblePoly<F>> Display for FiniteSimpleExtension<F, M> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.repr)
     }
@@ -214,7 +227,12 @@ impl<F: PerfectField, M: IrreduciblePoly<F>> SeparableFiniteExtension
     for FiniteSimpleExtension<F, M>
 {
     fn trace(&self) -> Self::BaseField {
-        todo!()
+        let multiplication_matrix = self.multiplication_matrix();
+        let mut result = Self::BaseField::zero();
+        for i in 0..Self::degree() {
+            result = result.clone() + multiplication_matrix[i][i].clone();
+        }
+        result
     }
 }
 

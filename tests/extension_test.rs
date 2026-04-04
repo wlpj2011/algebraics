@@ -44,11 +44,7 @@ fn gf4_all() -> [GF4; 4] {
 }
 
 fn gf4_all_non_zero() -> [GF4; 3] {
-    [
-        GF4::one(),
-        GF4::generator(),
-        GF4::generator() + GF4::one(),
-    ]
+    [GF4::one(), GF4::generator(), GF4::generator() + GF4::one()]
 }
 
 /// α = generator(), a root of x²+x+1.
