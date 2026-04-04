@@ -1,4 +1,4 @@
-use algebraics::finite_field::Fp;
+use algebraics::field::Fp;
 use algebraics::traits::{Field, Finite, FiniteField, One, Zero};
 
 // Edge case worth having for characteristic 2

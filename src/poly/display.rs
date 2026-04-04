@@ -13,7 +13,7 @@ use std::fmt::Display;
 /// ```
 /// # use algebraics::poly::Poly;
 /// # use algebraics::traits::{Zero, One};
-/// # type F = algebraics::finite_field::Fp<7>;
+/// # type F = algebraics::field::Fp<7>;
 ///
 /// let p = Poly::<F>::new(vec![F::one(), F::zero(), F::one()]);
 /// assert_eq!(format!("{}", p), "x^2 + 1");

@@ -9,7 +9,7 @@
 //!
 //! # Examples
 //! ```
-//! # use algebraics::finite_field::Fp;
+//! # use algebraics::field::Fp;
 //! # use algebraics::traits::{Field, Zero, One};
 //!
 //! type F7 = Fp<7>;

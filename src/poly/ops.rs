@@ -10,12 +10,12 @@ use std::ops::{Add, Mul, Neg, Sub};
 /// # Example
 /// ```
 /// # use algebraics::poly::Poly;
-/// # use algebraics::finite_field::Fp;
+/// # use algebraics::field::Fp;
 /// # use algebraics::traits::{Zero, One};
 /// # type F7 = Fp<7>;
-/// let p1 = Poly::<F7>::new(vec![F7::one(), F7::one()]); // x + 1
+/// let p1 = Poly::<F7>::new(vec![F7::one(), F7::one()]);  // x + 1
 /// let p2 = Poly::<F7>::new(vec![F7::new(2), F7::one()]); // x + 2
-/// let sum = &p1 + &p2;                                    // 2*x + 3 mod 7
+/// let sum = &p1 + &p2;                                   // 2*x + 3 mod 7
 /// assert_eq!(sum.to_string(), "2*x + 3");
 /// ```
 impl<T> Add for &Poly<T>
@@ -57,7 +57,7 @@ where
 /// # Example
 /// ```
 /// # use algebraics::poly::Poly;
-/// # use algebraics::finite_field::Fp;
+/// # use algebraics::field::Fp;
 /// # use algebraics::traits::{Zero, One};
 /// # type F7 = Fp<7>;
 /// let p = Poly::<F7>::new(vec![F7::one(), F7::one()]); // x + 1
@@ -101,7 +101,7 @@ where
 /// # Example
 /// ```
 /// # use algebraics::poly::Poly;
-/// # use algebraics::finite_field::Fp;
+/// # use algebraics::field::Fp;
 /// # use algebraics::traits::{Zero, One};
 /// # type F7 = Fp<7>;
 /// let p1 = Poly::<F7>::new(vec![F7::one(), F7::one()]); // x + 1
@@ -135,7 +135,7 @@ where
 /// # Example
 /// ```
 /// # use algebraics::poly::Poly;
-/// # use algebraics::finite_field::Fp;
+/// # use algebraics::field::Fp;
 /// # use algebraics::traits::{Zero, One};
 /// # type F7 = Fp<7>;
 /// let p1 = Poly::<F7>::new(vec![F7::one(), F7::one()]); // x + 1

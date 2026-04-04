@@ -78,10 +78,7 @@ pub trait EuclideanDomain: IntegralDomain {
     /// recoverable condition. Check before calling.
     fn div_rem(self, other: Self) -> (Self, Self);
 
-    fn gcd(mut a: Self, mut b: Self) -> Self
-    where
-        Self: Zero,
-    {
+    fn gcd(mut a: Self, mut b: Self) -> Self {
         // guard: gcd(0,0) is undefined
         while !b.is_zero() {
             let (_, r) = a.div_rem(b.clone());
@@ -89,6 +86,34 @@ pub trait EuclideanDomain: IntegralDomain {
             b = r;
         }
         a
+    }
+
+    fn ext_gcd(a: Self, b: Self) -> (Self, Self, Self)
+    where
+        Self: Clone,
+    {
+        // Invariant: old_r = old_s * a + old_t * b  at all times.
+        let mut old_r = a;
+        let mut r = b;
+        let mut old_s = Self::one();
+        let mut s = Self::zero();
+        let mut old_t = Self::zero();
+        let mut t = Self::one();
+
+        while !r.is_zero() {
+            let (q, rem) = old_r.clone().div_rem(r.clone());
+            old_r = r;
+            r = rem;
+            let new_s = old_s.clone() - q.clone() * s.clone();
+            old_s = s;
+            s = new_s;
+            let new_t = old_t.clone() - q * t.clone();
+            old_t = t;
+            t = new_t;
+        }
+
+        // old_r = gcd, old_s and old_t are the Bezout coefficients
+        (old_r, old_s, old_t)
     }
 }
 
@@ -113,3 +138,19 @@ impl<T: Field> EuclideanDomain for T {
         (self * other.inv().unwrap(), Self::zero())
     }
 }
+
+/// A [`Ring`] of finite characteristic.
+/// Specifically characteristic()  ≠ 0.
+/// A marker trait to make simple and separable extensions easier.
+pub trait CharPField: Field {}
+
+/// A [`Field`] of finite characteristic.
+/// Specifically characteristic() == 0.
+/// A marker trait to make simple and separable extensions easier.
+pub trait Char0Field: Field {}
+
+/// A [`Field`] where every algebraic extension is automatically separable.
+/// Char 0 fields and finite fields are perfect.
+// Can't use blanket impl for FiniteField because Rust doesn't realize Char0Field and FiniteField are disjoint
+pub trait PerfectField: Field {}
+impl<T: Char0Field> PerfectField for T {}
