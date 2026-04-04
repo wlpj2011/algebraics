@@ -38,6 +38,7 @@
 use std::fmt::Display;
 use std::marker::PhantomData;
 
+use crate::matrix_arithemetic::determinant;
 use crate::poly::Poly;
 use crate::traits::*;
 
@@ -78,20 +79,20 @@ impl<F: Field, M: IrreduciblePoly<F>> FiniteSimpleExtension<F, M> {
         }
     }
 
-    pub (crate) fn multiplication_matrix(&self) -> Vec<Vec<F>> {
-    let n = M::degree();
-    let mut cols = Vec::with_capacity(n);
-    let mut basis_elem = Self::one(); // α^0 = 1
-    let generator = Self::generator();
-    for _ in 0..n {
-        let product = self.clone() * basis_elem.clone();
-        // coefficients of product give the column, padding with zeros if needed
-        let col: Vec<F> = (0..n).map(|i| product.repr.coeff(i)).collect();
-        cols.push(col);
-        basis_elem = basis_elem * generator.clone();
+    pub(crate) fn multiplication_matrix(&self) -> Vec<Vec<F>> {
+        let n = M::degree();
+        let mut cols = Vec::with_capacity(n);
+        let mut basis_elem = Self::one(); // α^0 = 1
+        let generator = Self::generator();
+        for _ in 0..n {
+            let product = self.clone() * basis_elem.clone();
+            // coefficients of product give the column, padding with zeros if needed
+            let col: Vec<F> = (0..n).map(|i| product.repr.coeff(i)).collect();
+            cols.push(col);
+            basis_elem = basis_elem * generator.clone();
+        }
+        cols // cols[k][i] is the (i,k) entry of the matrix
     }
-    cols // cols[k][i] is the (i,k) entry of the matrix
-}
 }
 
 impl<F: Field, M: IrreduciblePoly<F>> Clone for FiniteSimpleExtension<F, M> {
@@ -211,7 +212,7 @@ impl<F: Field, M: IrreduciblePoly<F>> FiniteExtension for FiniteSimpleExtension<
     /// equivalently the constant term (up to sign and degree) of the
     /// characteristic polynomial of the multiplication-by-self map.
     fn norm(&self) -> Self::BaseField {
-        todo!()
+        determinant(self.multiplication_matrix())
     }
 }
 
