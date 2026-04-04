@@ -170,8 +170,11 @@ pub trait SeparableCharPFiniteExtension: CharPFiniteExtension + SeparableFiniteE
     ///
     /// Default: sums `frobenius_iter(k)` for k in `0..Self::degree()`
     fn trace_via_frobenius(&self) -> Self::BaseField {
-        todo!()
-    }
+    let sum_in_e = (0..Self::degree())
+        .map(|k| self.frobenius_iter(k))
+        .fold(Self::zero(), |acc, x| acc + x);
+    sum_in_e.project_to_base().unwrap()
+}
 }
 
 // Finite field extension.

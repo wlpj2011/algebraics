@@ -35,6 +35,7 @@
 //! - [`embed(k)`](FieldExtension::embed): the base field element k as a constant polynomial
 //! - [`generator()`](FiniteSimpleExtension::generator): the image of x, a root of M
 //! - [`new(p)`](FiniteSimpleExtension::new): an arbitrary polynomial reduced mod M
+use std::fmt::Display;
 use std::marker::PhantomData;
 
 use crate::poly::Poly;
@@ -100,6 +101,14 @@ impl<F: Field + std::fmt::Debug, M: IrreduciblePoly<F>> std::fmt::Debug
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:?}", self.repr)
+    }
+}
+
+impl<F: Field + Display, M: IrreduciblePoly<F>> Display
+    for FiniteSimpleExtension<F, M>
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.repr)
     }
 }
 
@@ -217,7 +226,13 @@ impl<F: PerfectField + CharPField, M: IrreduciblePoly<F>> CharPFiniteExtension
     for FiniteSimpleExtension<F, M>
 {
     fn frobenius(&self) -> Self {
-        todo!()
+        let p = Self::degree();
+        let x = self.clone();
+        let mut result = self.clone();
+        for _ in 1..p {
+            result = &result * &x;
+        }
+        result
     }
 }
 

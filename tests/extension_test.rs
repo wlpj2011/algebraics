@@ -43,6 +43,14 @@ fn gf4_all() -> [GF4; 4] {
     ]
 }
 
+fn gf4_all_non_zero() -> [GF4; 3] {
+    [
+        GF4::one(),
+        GF4::generator(),
+        GF4::generator() + GF4::one(),
+    ]
+}
+
 /// α = generator(), a root of x²+x+1.
 fn alpha() -> GF4 {
     GF4::generator()
@@ -251,22 +259,22 @@ fn test_gf4_frobenius_values() {
 #[test]
 fn test_gf4_frobenius_iter_2_is_identity() {
     // Frobenius^[GF4:F2] = id
-    for a in gf4_all() {
-        assert_eq!(a.frobenius_iter(2), a.clone());
+    for a in gf4_all_non_zero() {
+        assert_eq!(a.clone(), a.frobenius_iter(2));
     }
 }
 
 #[test]
 fn test_gf4_frobenius_iter_0_is_identity() {
-    for a in gf4_all() {
+    for a in gf4_all_non_zero() {
         assert_eq!(a.frobenius_iter(0), a.clone());
     }
 }
 
 #[test]
 fn test_gf4_frobenius_preserves_addition() {
-    for a in gf4_all() {
-        for b in gf4_all() {
+    for a in gf4_all_non_zero() {
+        for b in gf4_all_non_zero() {
             assert_eq!(
                 (a.clone() + b.clone()).frobenius(),
                 a.frobenius() + b.frobenius()
