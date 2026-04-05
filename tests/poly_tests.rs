@@ -4,12 +4,23 @@ use algebraics::poly::PolyIter;
 use algebraics::traits::EuclideanDomain;
 use algebraics::traits::{Finite, One, Zero};
 
+
+#[test]
+fn test_poly_normalization_equality() {
+    type F = Fp<7u64>;
+
+    let p1 = Poly::new(vec![F::new(1), F::new(2), F::zero(), F::zero()]);
+    let p2 = Poly::new(vec![F::new(1), F::new(2)]);
+
+    assert_eq!(p1, p2);
+}
+
 #[test]
 fn test_poly_fp7_deg2_add_identity() {
     type CoeffField = Fp<7u64>;
     let n = 2;
     for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
-        assert_eq!(p.clone() + Poly::zero(), p);
+        assert_eq!(&p + &Poly::zero(), p);
     }
 }
 
@@ -18,7 +29,7 @@ fn test_poly_fp7_deg2_mul_identity() {
     type CoeffField = Fp<7u64>;
     let n = 2;
     for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
-        assert_eq!(p.clone() * Poly::one(), p);
+        assert_eq!(&p * &Poly::one(), p);
     }
 }
 
@@ -27,7 +38,7 @@ fn test_poly_fp7_deg2_additive_inverse() {
     type CoeffField = Fp<7u64>;
     let n = 2;
     for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
-        assert_eq!(p.clone() + (-p.clone()), Poly::zero());
+        assert_eq!(&p + &-(&p), Poly::zero());
     }
 }
 
@@ -36,7 +47,7 @@ fn test_poly_fp7_deg2_negation_double() {
     type CoeffField = Fp<7u64>;
     let n = 2;
     for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
-        assert_eq!(-(-p.clone()), p);
+        assert_eq!(-&(-&p), p);
     }
 }
 
@@ -46,7 +57,7 @@ fn test_poly_fp7_deg2_subtraction() {
     let n = 2;
     for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
         for q in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
-            assert_eq!(p.clone() - q.clone(), p.clone() + (-q.clone()));
+            assert_eq!(&p - &q, &p + &(-&q));
         }
     }
 }
@@ -57,7 +68,7 @@ fn test_poly_fp7_deg2_add_commutativity() {
     let n = 2;
     for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
         for q in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
-            assert_eq!(p.clone() + q.clone(), q.clone() + p.clone());
+            assert_eq!(&p + &q, &q + &p);
         }
     }
 }
@@ -70,8 +81,8 @@ fn test_poly_fp7_deg1_add_associativity() {
         for q in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
             for r in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
                 assert_eq!(
-                    (p.clone() + q.clone()) + r.clone(),
-                    p.clone() + (q.clone() + r.clone())
+                    &(&p + &q) + &r,
+                    &p + &(&q + &r)
                 );
             }
         }
@@ -84,7 +95,7 @@ fn test_poly_fp7_deg1_mul_commutativity() {
     let n = 1;
     for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
         for q in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
-            assert_eq!(p.clone() * q.clone(), q.clone() * p.clone());
+            assert_eq!(&p * &q, &q * &p);
         }
     }
 }
@@ -94,8 +105,8 @@ fn test_poly_fp7_deg2_mul_zero() {
     type CoeffField = Fp<7u64>;
     let n = 2;
     for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
-        assert_eq!(p.clone() * Poly::zero(), Poly::zero());
-        assert_eq!(Poly::zero() * p.clone(), Poly::zero());
+        assert_eq!(&p * &Poly::zero(), Poly::zero());
+        assert_eq!(&Poly::zero() * &p, Poly::zero());
     }
 }
 
@@ -123,7 +134,7 @@ fn test_poly_fp7_deg1_degree_sum() {
             if p1 == Poly::zero() || p2 == Poly::zero() {
                 continue;
             }
-            let sum_deg = (p1.clone() + p2.clone()).degree();
+            let sum_deg = (&p1 + &p2).degree();
             let max_deg = p1.degree().unwrap().max(p2.degree().unwrap());
             assert!(sum_deg.map_or(true, |d| d <= max_deg));
         }
@@ -139,7 +150,7 @@ fn test_poly_fp7_deg1_degree_mul() {
             if p1 == Poly::zero() || p2 == Poly::zero() {
                 continue;
             }
-            let prod_deg = (p1.clone() * p2.clone()).degree().unwrap();
+            let prod_deg = (&p1 * &p2).degree().unwrap();
             let sum_deg = p1.degree().unwrap() + p2.degree().unwrap();
             assert_eq!(prod_deg, sum_deg);
         }
@@ -238,4 +249,81 @@ fn test_poly_fp7_div_rem_all_bounded() {
             }
         }
     }
+}
+
+#[test]
+fn test_poly_fp7_div_non_monic() {
+    type F = Fp<7u64>;
+
+    let f = Poly::new(vec![F::new(1), F::new(2), F::new(3)]);
+    let g = Poly::new(vec![F::new(2), F::new(2)]); // not monic
+
+    let (q, r) = f.clone().div_rem(g.clone());
+
+    let reconstructed = &(&q * &g) + &r;
+    assert_eq!(reconstructed, f);
+}
+
+#[test]
+fn test_poly_fp7_high_degree_mul() {
+    type F = Fp<7u64>;
+
+    let p = Poly::new((0..20).map(|i| F::new(i % 7)).collect());
+    let q = Poly::new((0..20).map(|i| F::new((2 * i) % 7)).collect());
+
+    let prod = &p * &q;
+
+    // Basic sanity: degree check
+    assert_eq!(
+        prod.degree().unwrap(),
+        p.degree().unwrap() + q.degree().unwrap()
+    );
+}
+
+#[test]
+fn test_poly_fp11_sampled_arithmetic() {
+    type F = Fp<11u64>;
+
+    for i in 0..50 {
+        let p = Poly::new((0..10).map(|j| F::new((i + j * 3) % 11)).collect());
+        let q = Poly::new((0..10).map(|j| F::new((i * 2 + j) % 11)).collect());
+        let r = Poly::new((0..10).map(|j| F::new((i + j * 5) % 11)).collect());
+
+        // Distributivity
+        assert_eq!(
+            &p * &(&q + &r),
+            &(&p * &q) + &(&p * &r)
+        );
+    }
+}
+
+#[test]
+fn test_poly_fp7_high_degree_division() {
+    type F = Fp<7u64>;
+
+    let f = Poly::new((0..15).map(|i| F::new(i % 7)).collect());
+    let g = Poly::new((0..5).map(|i| F::new((i + 1) % 7)).collect());
+
+    let (q, r) = f.clone().div_rem(g.clone());
+
+    let reconstructed = &(&q * &g) + &r;
+    assert_eq!(reconstructed, f);
+
+    if !r.is_zero() {
+        assert!(r.degree().unwrap() < g.degree().unwrap());
+    }
+}
+
+#[test]
+fn test_poly_fp97_basic_properties() {
+    type F = Fp<97u64>;
+
+    let p = Poly::new(vec![F::new(3), F::new(45), F::new(2)]);
+    let q = Poly::new(vec![F::new(10), F::new(1)]);
+
+    // Check distributivity
+    let lhs = &p * &(&q + &Poly::one());
+    let rhs = &(&p * &q) + &p;
+
+    assert_eq!(lhs, rhs);
 }
