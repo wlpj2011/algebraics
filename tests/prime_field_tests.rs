@@ -23,9 +23,65 @@ fn test_fp7_additive_inverse() {
     }
 }
 
+#[test]
+fn test_fp7_commutativity() {
+    type F = Fp<7u64>;
+
+    for a in F::enumerate() {
+        for b in F::enumerate() {
+            assert_eq!(a + b, b + a);
+            assert_eq!(a * b, b * a);
+        }
+    }
+}
+
+#[test]
+fn test_fp7_associativity() {
+    type F = Fp<7u64>;
+
+    for a in F::enumerate() {
+        for b in F::enumerate() {
+            for c in F::enumerate() {
+                assert_eq!((a + b) + c, a + (b + c));
+                assert_eq!((a * b) * c, a * (b * c));
+            }
+        }
+    }
+}
+
+#[test]
+fn test_fp7_zero_multiplication() {
+    type F = Fp<7u64>;
+
+    let zero = F::zero();
+
+    for a in F::enumerate() {
+        assert_eq!(a * zero, zero);
+        assert_eq!(zero * a, zero);
+    }
+}
+
+#[test]
+fn test_fp7_enumeration_size() {
+    type F = Fp<7u64>;
+
+    let elems: Vec<_> = F::enumerate().collect();
+    assert_eq!(elems.len(), 7);
+
+    // Ensure all elements are distinct
+    for i in 0..elems.len() {
+        for j in 0..elems.len() {
+            if i != j {
+                assert_ne!(elems[i], elems[j]);
+            }
+        }
+    }
+}
+
 // Checks multiplicative inverse for all nonzero elements
 #[test]
 fn test_fp7_multiplicative_inverse() {
+    assert_eq!(Fp::<7>::zero().inv(), None);
     for a in Fp::<7>::multiplicative_group() {
         assert_eq!(a * a.inv().unwrap(), Fp::<7>::one());
     }
