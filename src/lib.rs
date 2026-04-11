@@ -12,3 +12,4 @@ pub mod arithmetic;
 pub mod field;
 pub mod matrix_arithmetic;
 pub mod poly;
+pub mod conway;
