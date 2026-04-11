@@ -4,7 +4,6 @@ use algebraics::poly::PolyIter;
 use algebraics::traits::EuclideanDomain;
 use algebraics::traits::{Finite, One, Zero};
 
-
 #[test]
 fn test_poly_normalization_equality() {
     type F = Fp<7u64>;
@@ -80,10 +79,7 @@ fn test_poly_fp7_deg1_add_associativity() {
     for p in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
         for q in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
             for r in PolyIter::<CoeffField>::all_of_bounded_degree(n) {
-                assert_eq!(
-                    &(&p + &q) + &r,
-                    &p + &(&q + &r)
-                );
+                assert_eq!(&(&p + &q) + &r, &p + &(&q + &r));
             }
         }
     }
@@ -290,10 +286,7 @@ fn test_poly_fp11_sampled_arithmetic() {
         let r = Poly::new((0..10).map(|j| F::new((i + j * 5) % 11)).collect());
 
         // Distributivity
-        assert_eq!(
-            &p * &(&q + &r),
-            &(&p * &q) + &(&p * &r)
-        );
+        assert_eq!(&p * &(&q + &r), &(&p * &q) + &(&p * &r));
     }
 }
 

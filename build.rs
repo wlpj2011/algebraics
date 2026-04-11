@@ -35,10 +35,7 @@ fn parse_conway_table(src: &str) -> Vec<Entry> {
         let line = line.trim();
 
         // Skip the wrapper line, the sentinel `0]`, and blank lines
-        if line.is_empty()
-            || line == "allConwayPolynomials := ["
-            || line.starts_with("0]")
-        {
+        if line.is_empty() || line == "allConwayPolynomials := [" || line.starts_with("0]") {
             continue;
         }
 
@@ -92,7 +89,9 @@ fn write_table(out: &mut fs::File, entries: &[Entry]) -> std::io::Result<()> {
     for (i, e) in entries.iter().enumerate() {
         write!(out, "static COEFFS_{i}: &[u64] = &[")?;
         for (j, c) in e.coeffs.iter().enumerate() {
-            if j > 0 { write!(out, ", ")?; }
+            if j > 0 {
+                write!(out, ", ")?;
+            }
             write!(out, "{c}")?;
         }
         writeln!(out, "];")?;
@@ -101,10 +100,7 @@ fn write_table(out: &mut fs::File, entries: &[Entry]) -> std::io::Result<()> {
     writeln!(out)?;
 
     // Main table: sorted array of (p, n, coeffs)
-    writeln!(
-        out,
-        "static CONWAY_TABLE: &[(u64, u64, &[u64])] = &["
-    )?;
+    writeln!(out, "static CONWAY_TABLE: &[(u64, u64, &[u64])] = &[")?;
     for (i, e) in entries.iter().enumerate() {
         writeln!(out, "    ({}, {}, COEFFS_{i}),", e.p, e.n)?;
     }
