@@ -1,4 +1,6 @@
-use crate::{field::Fp, poly::Poly};
+use crate::field::Fp;
+use crate::poly::Poly;
+use crate::traits::Zero;
 
 // src/conway.rs
 include!(concat!(env!("OUT_DIR"), "/conway_table.rs"));

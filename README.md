@@ -16,7 +16,7 @@ The immediate research motivation is computation related to Gauss sums, Frobeniu
 
 ## Building and Testing
 
-Requires a recent stable Rust toolchain (edition 2024). To build:
+Requires a recent stable Rust toolchain (edition 2024). The build step generates a lookup table for Conway polynomials from `data/conway_polynomials.txt`; this happens automatically. To build:
 
 ```
 cargo build
@@ -31,8 +31,10 @@ cargo test
 ## Usage
 
 ```rust
-use algebraics::prime_field::Fp;
+use algebraics::field::Fp;
+use algebraics::field::FpN;
 use algebraics::poly::Poly;
+use algebraics::traits::{Finite, FiniteExtension, SeparableFiniteExtension};
 
 // Elements of F_7
 let a = Fp::<7>::new(3);
@@ -41,11 +43,20 @@ assert_eq!(a + b, Fp::<7>::new(1));  // 3 + 5 = 1 mod 7
 
 // Polynomials over F_7
 // p = 1 + 2x + 3x^2,  q = 4 + 5x
-// The reference &p, &q prevents p,q from being 'consumed' by taking their product
 let p = Poly::new(vec![Fp::<7>::new(1), Fp::<7>::new(2), Fp::<7>::new(3)]);
 let q = Poly::new(vec![Fp::<7>::new(4), Fp::<7>::new(5)]);
 let product = &p * &q;
-println!("({}) * ({}) = {}", p, q, product)
+println!("({}) * ({}) = {}", p, q, product);
+
+// GF(9) = F_3[x]/(x^2 + 2x + 2)
+type GF9 = FpN<3, 2>;
+let alpha = GF9::generator();  // a root of the Conway polynomial
+println!("GF(9) has {} elements", GF9::size());
+println!("Tr(alpha) = {}", alpha.trace());
+
+// GF(13^6) — a field with over 4 million elements
+type GF13_6 = FpN<13, 6>;
+println!("degree = {}", <GF13_6 as FiniteExtension>::degree());
 ```
 
 Instantiation with a composite modulus is a compile-time error:
@@ -56,14 +67,15 @@ let a = Fp::<4>::new(1);  // does not compile
 
 ## Current Status
 
-The trait hierarchy is in place, running from `Magma` through `Field`, with supporting traits `Zero`, `One`, `Finite`, `FiniteRing`, and `FiniteField`.
+The trait hierarchy runs from `Magma` through `Field`, with supporting traits `Zero`, `One`, `Finite`, `FiniteRing`, and `FiniteField`, plus a full suite of extension traits (`FieldExtension`, `FiniteExtension`, `SeparableExtension`, `CharPFiniteExtension`, and more).
 
-The prime field $\mathbb{F}_p$, implemented as `Fp<const P: u64>`, is complete. Primality of `P` is checked at compile time via a `const` assertion, so instantiation with a composite modulus is a compile error. Multiplicative inversion uses Fermat's little theorem. The full test suite covers additive and multiplicative axioms exhaustively over small fields, and Fermat's little theorem over a larger prime.
+**`Fp<P>`** is complete. Primality of `P` is checked at compile time, so instantiation with a composite modulus is a compile error. Multiplicative inversion uses Fermat's little theorem.
 
-The polynomial ring `Poly<T: Ring>` is implemented, with addition, subtraction, multiplication, and negation. Normalization (removal of leading zero coefficients) is handled on construction. Tests cover the ring axioms and degree behavior over $\mathbb{F}_7$.
-`PolyIter<T: FiniteRing>` allows easy iteration over all polynomials of given or bounded degree.
+**`Poly<T: Ring>`** is complete, with addition, subtraction, multiplication, negation, and polynomial long division (`EuclideanDomain`). `PolyIter<T: FiniteRing>` allows iteration over all polynomials of given or bounded degree.
 
-See the issue tracker for known bugs and planned features.
+**`FiniteSimpleExtension<F, M>`** is complete. Given a field `F` and a zero-size marker type `M` implementing `IrreduciblePoly<F>`, this constructs the quotient field `F[x]/(M(x))`. Implements the full extension trait hierarchy including `FiniteExtension` (norm, projection), `SeparableFiniteExtension` (trace), and `CharPFiniteExtension` (Frobenius).
+
+**`FpN<P, N>`** is complete. A type alias for `FiniteSimpleExtension<Fp<P>, ConwayPoly<P, N>>`, giving the finite field GF(p^n) with the Conway polynomial as modulus. Conway polynomials are sourced from Frank Lübeck's precomputed table, embedded at compile time via `build.rs`. The generator `FpN::<P, N>::generator()` is a primitive root of GF(p^n)^×.
 
 ## License
 

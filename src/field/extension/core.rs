@@ -48,7 +48,7 @@ use crate::traits::*;
 /// [`IrreduciblePoly<F>`].
 pub struct FiniteSimpleExtension<F: Field, M: IrreduciblePoly<F>> {
     pub(crate) repr: Poly<F>,
-    _m: PhantomData<M>, // M is only used as a const modulus, never stored
+    pub(crate) _m: PhantomData<M>, // M is only used as a const modulus, never stored
 }
 
 impl<F: Field, M: IrreduciblePoly<F>> FiniteSimpleExtension<F, M> {
@@ -168,8 +168,9 @@ impl<F: Field, M: IrreduciblePoly<F>> Field for FiniteSimpleExtension<F, M> {
         if self.is_zero() {
             return None;
         }
-        let (_, u, _) = Poly::ext_gcd(self.repr.clone(), M::modulus());
-        Some(Self::new(u))
+        let (g, u, _) = Poly::ext_gcd(self.repr.clone(), M::modulus());
+        let g_inv = g.lead_coeff().inv().unwrap();
+        Some(Self::new(u * Poly::new_constant(g_inv)))
     }
 }
 
