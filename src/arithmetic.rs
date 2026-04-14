@@ -1,4 +1,6 @@
-// Computes `base^exp mod modulus` using binary exponentiation.
+use crate::traits::*;
+
+/// Computes `base^exp mod modulus` using binary exponentiation.
 ///
 /// # Panics
 /// Does not panic, but output is unspecified if `modulus == 0`.
@@ -11,6 +13,20 @@ pub const fn mod_pow(mut base: u64, mut exp: u64, modulus: u64) -> u64 {
         }
         exp >>= 1;
         base = ((base as u128 * base as u128) % modulus as u128) as u64;
+    }
+    result
+}
+
+/// Binary exponentiation for any `Ring + Clone`.
+pub fn pow<F: Ring + Clone>(base: F, mut exp: u64) -> F {
+    let mut result = F::one();
+    let mut b = base;
+    while exp > 0 {
+        if exp & 1 == 1 {
+            result = result.clone() * b.clone();
+        }
+        exp >>= 1;
+        b = b.clone() * b.clone();
     }
     result
 }
