@@ -1,6 +1,5 @@
 use crate::field::Fp;
 use crate::poly::Poly;
-use crate::traits::Zero;
 
 // src/conway.rs
 include!(concat!(env!("OUT_DIR"), "/conway_table.rs"));
@@ -19,6 +18,7 @@ pub fn conway_poly_fp<const P: u64>(n: u64) -> Option<Poly<Fp<P>>> {
 
 #[test]
 fn test_conway() {
+    use crate::traits::Zero;
     assert!(conway_poly(2, 1).is_some());
     assert_eq!(conway_poly(2, 1).unwrap(), &[1u64, 1]);
     assert_eq!(
