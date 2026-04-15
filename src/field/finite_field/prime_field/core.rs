@@ -17,7 +17,7 @@ pub struct Fp<const P: u64>(u64);
 
 impl<const P: u64> Zero for Fp<P> {
     fn zero() -> Self {
-        Fp(0)
+        Fp::new(0)
     }
 
     fn is_zero(&self) -> bool {
@@ -27,7 +27,7 @@ impl<const P: u64> Zero for Fp<P> {
 
 impl<const P: u64> One for Fp<P> {
     fn one() -> Self {
-        Fp(1)
+        Fp::new(1)
     }
 }
 

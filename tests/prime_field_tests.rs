@@ -118,10 +118,18 @@ fn test_reduction() {
 }
 
 #[test]
+fn test_large_prime_overflow_add() {
+    const P: u64 = 18_446_744_073_709_551_557;
+    let a = Fp::<P>::new(P - 1);
+    let b = Fp::<P>::new(P - 1);
+    assert_eq!(a + b, Fp::<P>::new(P - 2));
+}
+
+#[test]
 fn test_large_prime_overflow_mul() {
     const P: u64 = 18_446_744_073_709_551_557; // 2^64 - 59
-    let a = Fp::<P>::new(18_446_744_073_709_551_556);
-    let b = Fp::<P>::new(18_446_744_073_709_551_556);
-    println!("{} * {} = 1", a, b);
+    let a = Fp::<P>::new(P - 1);
+    let b = Fp::<P>::new(P - 1);
     assert_eq!(a * b, Fp::<P>::one());
 }
+
