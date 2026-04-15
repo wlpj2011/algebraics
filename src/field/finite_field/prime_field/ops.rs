@@ -17,7 +17,7 @@ impl<const P: u64> Add for Fp<P> {
 impl<const P: u64> Neg for Fp<P> {
     type Output = Self;
     fn neg(self) -> Self::Output {
-        Fp::new((P as u128 - self.value() as u128) as u64)
+        Fp::new(P - self.value())
     }
 }
 
