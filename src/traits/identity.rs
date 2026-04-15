@@ -5,7 +5,7 @@
 /// # Contract
 /// - **Left identity**: `Zero::zero() + a == a` for all `a`
 /// - **Right identity**: `a + Zero::zero() == a` for all `a`
-/// - **Consistency**: `is_zero()` returns `true` if and only if `self == Zero:
+/// - **Consistency**: `is_zero()` returns `true` if and only if `self == Zero`
 pub trait Zero {
     /// Returns the additive identity element.
     fn zero() -> Self;

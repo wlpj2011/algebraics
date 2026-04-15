@@ -64,10 +64,9 @@ impl<T> Poly<T> {
     {
         self.coeffs.get(i).cloned().unwrap_or(T::zero())
     }
-    /// Returns the coefficient of x^i.
-    ///
-    /// If `i` is greater than the polynomial's degree, returns `T::zero()`.
-    ///
+
+    /// Returns the coefficient of x^deg(f).
+    /// 
     /// This is a `pub(crate)` method intended for use within the `poly` module (e.g., for
     /// arithmetic operations or display formatting).
     pub(crate) fn lead_coeff(&self) -> T
@@ -109,6 +108,7 @@ impl<T: Zero + PartialEq> Poly<T> {
         }
     }
 
+    /// Creates a new polynomial from a single ring element, embedding in T[X] as a constant polynomial.
     pub fn new_constant(coeff: T) -> Self {
         Self::new(vec![coeff])
     }
