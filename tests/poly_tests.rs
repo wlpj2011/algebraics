@@ -320,3 +320,23 @@ fn test_poly_fp97_basic_properties() {
 
     assert_eq!(lhs, rhs);
 }
+
+#[test]
+fn test_poly_fp7_gcd_coprime() {
+    type F = Fp<7>;
+    let f = Poly::new(vec![F::new(1), F::new(1)]);  // x + 1
+    let g = Poly::new(vec![F::new(1), F::new(2)]);  // 2x + 1
+    let d = Poly::gcd(f, g);
+    assert_eq!(d.degree(), Some(0)); // constant, i.e. coprime
+}
+
+#[test]
+fn test_poly_fp7_gcd_with_common_factor() {
+    type F = Fp<7>;
+    let factor = Poly::new(vec![F::new(1), F::new(1)]); // x + 1
+    let f = &factor * &Poly::new(vec![F::new(2), F::new(1)]); // (x+1)(x+2)
+    let g = &factor * &Poly::new(vec![F::new(3), F::new(1)]); // (x+1)(x+3)
+    let d = Poly::gcd(f, g);
+    // gcd should be a scalar multiple of x+1
+    assert_eq!(d.degree(), Some(1));
+}
