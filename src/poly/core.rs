@@ -66,7 +66,7 @@ impl<T> Poly<T> {
     }
 
     /// Returns the coefficient of x^deg(f).
-    /// 
+    ///
     /// This is a `pub(crate)` method intended for use within the `poly` module (e.g., for
     /// arithmetic operations or display formatting).
     pub(crate) fn lead_coeff(&self) -> T

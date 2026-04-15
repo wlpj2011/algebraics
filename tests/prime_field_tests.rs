@@ -1,65 +1,40 @@
 use algebraics::field::Fp;
 use algebraics::traits::{Field, Finite, FiniteField, One, Zero};
 
+mod helpers;
+use helpers::*;
+
 // Edge case worth having for characteristic 2
 #[test]
 fn test_fp2_negation() {
     assert_eq!(-Fp::<2>::new(1), Fp::<2>::new(1));
 }
 
-// Checks additive identity axiom exhaustively for a small field
 #[test]
-fn test_fp7_additive_identity() {
-    for a in Fp::<7>::enumerate() {
-        assert_eq!(a + Fp::<7>::zero(), a);
-    }
-}
-
-// Checks additive inverse axiom exhaustively
-#[test]
-fn test_fp7_additive_inverse() {
-    for a in Fp::<7>::enumerate() {
-        assert_eq!(a + (-a), Fp::<7>::zero());
-    }
+fn test_fp7_axioms_exhaustive() {
+    let elems = exhaustive_elements::<Fp<7>>();
+    check_field_axioms(&elems);
 }
 
 #[test]
-fn test_fp7_commutativity() {
-    type F = Fp<7u64>;
-
-    for a in F::enumerate() {
-        for b in F::enumerate() {
-            assert_eq!(a + b, b + a);
-            assert_eq!(a * b, b * a);
-        }
-    }
+fn test_fp23_axioms_exhaustive() {
+    let elems = exhaustive_elements::<Fp<23>>();
+    check_field_axioms(&elems);
 }
 
 #[test]
-fn test_fp7_associativity() {
-    type F = Fp<7u64>;
-
-    for a in F::enumerate() {
-        for b in F::enumerate() {
-            for c in F::enumerate() {
-                assert_eq!((a + b) + c, a + (b + c));
-                assert_eq!((a * b) * c, a * (b * c));
-            }
-        }
-    }
+fn test_fp101_axioms_exhaustive() {
+    let elems = exhaustive_elements::<Fp<101>>();
+    check_field_axioms(&elems);
 }
 
+#[cfg(feature = "expensive_tests")]
 #[test]
-fn test_fp7_zero_multiplication() {
-    type F = Fp<7u64>;
-
-    let zero = F::zero();
-
-    for a in F::enumerate() {
-        assert_eq!(a * zero, zero);
-        assert_eq!(zero * a, zero);
-    }
+fn test_fp547_axioms_exhaustive() {
+    let elems = exhaustive_elements::<Fp<547>>();
+    check_field_axioms(&elems);
 }
+
 
 #[test]
 fn test_fp7_enumeration_size() {
@@ -73,27 +48,6 @@ fn test_fp7_enumeration_size() {
         for j in 0..elems.len() {
             if i != j {
                 assert_ne!(elems[i], elems[j]);
-            }
-        }
-    }
-}
-
-// Checks multiplicative inverse for all nonzero elements
-#[test]
-fn test_fp7_multiplicative_inverse() {
-    assert_eq!(Fp::<7>::zero().inv(), None);
-    for a in Fp::<7>::multiplicative_group() {
-        assert_eq!(a * a.inv().unwrap(), Fp::<7>::one());
-    }
-}
-
-// Checks distributivity for all triples — F_7 is small enough to be exhaustive
-#[test]
-fn test_fp7_distributivity() {
-    for a in Fp::<7>::enumerate() {
-        for b in Fp::<7>::enumerate() {
-            for c in Fp::<7>::enumerate() {
-                assert_eq!(a * (b + c), a * b + a * c);
             }
         }
     }
@@ -132,4 +86,3 @@ fn test_large_prime_overflow_mul() {
     let b = Fp::<P>::new(P - 1);
     assert_eq!(a * b, Fp::<P>::one());
 }
-

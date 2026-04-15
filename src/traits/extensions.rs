@@ -177,5 +177,9 @@ pub trait SeparableCharPFiniteExtension: CharPFiniteExtension + SeparableFiniteE
     }
 }
 
+pub trait HasMultiplicativeGenerator: Sized {
+    fn multiplicative_generator() -> Self;
+}
+
 // Finite field extension.
 // pub trait FiniteFieldExtension: SeparableCharPExtension + FiniteField {}

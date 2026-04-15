@@ -21,3 +21,11 @@ impl<F: FiniteField, M: IrreduciblePoly<F>> FiniteRing for FiniteSimpleExtension
         !self.is_zero()
     }
 }
+
+impl<F: FiniteField, M: IrreduciblePoly<F>> HasMultiplicativeGenerator
+    for FiniteSimpleExtension<F, M>
+{
+    fn multiplicative_generator() -> Self {
+        Self::generator()
+    }
+}

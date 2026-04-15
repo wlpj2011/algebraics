@@ -223,6 +223,7 @@ fn test_poly_fp5_div_rem() {
     );
 }
 
+#[cfg(feature = "expensive_tests")]
 #[test]
 fn test_poly_fp7_div_rem_all_bounded() {
     type F = Fp<7u64>;
@@ -324,8 +325,8 @@ fn test_poly_fp97_basic_properties() {
 #[test]
 fn test_poly_fp7_gcd_coprime() {
     type F = Fp<7>;
-    let f = Poly::new(vec![F::new(1), F::new(1)]);  // x + 1
-    let g = Poly::new(vec![F::new(1), F::new(2)]);  // 2x + 1
+    let f = Poly::new(vec![F::new(1), F::new(1)]); // x + 1
+    let g = Poly::new(vec![F::new(1), F::new(2)]); // 2x + 1
     let d = Poly::gcd(f, g);
     assert_eq!(d.degree(), Some(0)); // constant, i.e. coprime
 }
