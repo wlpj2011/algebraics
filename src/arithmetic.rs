@@ -17,7 +17,18 @@ pub const fn mod_pow(mut base: u64, mut exp: u64, modulus: u64) -> u64 {
     result
 }
 
-/// Binary exponentiation for any `Ring + Clone`.
+/// Computes `base^exp` for any [`Ring`] + [`Clone`] using binary (square-and-multiply) exponentiation.
+///
+/// Returns [`One::one()`] if `exp == 0`.
+///
+/// # Examples
+/// ```
+/// # use algebraics::field::Fp;
+/// # use algebraics::traits::One;
+/// use algebraics::arithmetic::pow;
+/// // Fermat's little theorem: a^(p-1) = 1 in F_p for a ≠ 0
+/// assert_eq!(pow(Fp::<7>::new(3), 6), Fp::<7>::one());
+/// ```
 pub fn pow<F: Ring + Clone>(base: F, mut exp: u64) -> F {
     let mut result = F::one();
     let mut b = base;

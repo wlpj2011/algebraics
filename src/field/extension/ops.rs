@@ -1,4 +1,4 @@
-//! Arithmetic operators (`Add`, `Sub`, `Mul`, `Neg`) for `Poly<T>`.
+//! Arithmetic operators (`Add`, `Sub`, `Mul`, `Neg`) for [`FiniteSimpleExtension<F, M>`](crate::field::FiniteSimpleExtension).
 
 use crate::field::FiniteSimpleExtension;
 use crate::traits::*;

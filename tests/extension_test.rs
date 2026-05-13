@@ -326,6 +326,19 @@ fn test_gf4_trace_via_frobenius_agrees_with_trace() {
     }
 }
 
+#[test]
+fn test_gf4_trace_k_linear() {
+    // Tr(k * a) = k * Tr(a) for all k in F_2, a in GF(4)
+    for k in Fp::<2>::enumerate() {
+        for a in gf4_all() {
+            assert_eq!(
+                (GF4::embed(k) * a.clone()).trace(),
+                k * a.trace()
+            );
+        }
+    }
+}
+
 // ---- Norm ----
 //
 // FiniteExtension::norm and FieldExtension::norm have the same name but

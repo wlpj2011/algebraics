@@ -121,6 +121,28 @@ fn test_gf8_norm_nonzero_is_one() {
 }
 
 #[test]
+fn test_gf8_frobenius_iter_3_is_identity() {
+    // Frobenius^[GF8:F2] = id  (degree 3, so φ³ = id)
+    for x in GF8::enumerate() {
+        assert_eq!(x.clone(), x.frobenius_iter(3));
+    }
+}
+
+#[test]
+fn test_gf8_trace_k_linear() {
+    // Tr(k*a) = k*Tr(a) for k in F_2, a in GF(8)
+    let elems: Vec<GF8> = GF8::enumerate().collect();
+    for k in Fp::<2>::enumerate() {
+        for a in &elems {
+            assert_eq!(
+                (GF8::embed(k) * a.clone()).trace(),
+                k * a.trace()
+            );
+        }
+    }
+}
+
+#[test]
 fn test_gf8_field_axioms_exhaustive() {
     let elems: Vec<GF8> = GF8::enumerate().collect();
     for a in &elems {
@@ -210,6 +232,28 @@ fn test_gf9_norm_multiplicative() {
             assert_eq!(
                 FiniteExtension::norm(&(a.clone() * b.clone())),
                 FiniteExtension::norm(a) * FiniteExtension::norm(b),
+            );
+        }
+    }
+}
+
+#[test]
+fn test_gf9_frobenius_iter_2_is_identity() {
+    // Frobenius^[GF9:F3] = id  (degree 2, so φ² = id)
+    for x in GF9::enumerate() {
+        assert_eq!(x.clone(), x.frobenius_iter(2));
+    }
+}
+
+#[test]
+fn test_gf9_trace_k_linear() {
+    // Tr(k*a) = k*Tr(a) for k in F_3, a in GF(9)
+    let elems: Vec<GF9> = GF9::enumerate().collect();
+    for k in Fp::<3>::enumerate() {
+        for a in &elems {
+            assert_eq!(
+                (GF9::embed(k) * a.clone()).trace(),
+                k * a.trace()
             );
         }
     }

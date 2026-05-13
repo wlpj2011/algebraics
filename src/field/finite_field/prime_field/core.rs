@@ -45,24 +45,21 @@ impl<const P: u64> CommutativeRing for Fp<P> {}
 impl<const P: u64> IntegralDomain for Fp<P> {}
 
 impl<const P: u64> Field for Fp<P> {
-    /// Inverts an element of F_p.
+    /// Returns the multiplicative inverse of `self` via Fermat's little theorem (`a^{p-2} mod p`),
+    /// or `None` if `self` is zero.
     ///
     /// # Examples
-    ///
-    /// non-zero elements return Some(inverse)
     /// ```
     /// # use algebraics::field::Fp;
     /// # use algebraics::traits::Field;
     /// let a = Fp::<7>::new(3);
     /// assert_eq!(a.inv(), Some(Fp::<7>::new(5))); // 3 * 5 = 1 mod 7
     /// ```
-    ///
-    /// 0 has no inverse and returns None
-    ///  ```
+    /// ```
     /// # use algebraics::field::Fp;
     /// # use algebraics::traits::Field;
     /// let a = Fp::<7>::new(0);
-    /// assert_eq!(a.inv(), None); // 3 * 5 = 1 mod 7
+    /// assert_eq!(a.inv(), None);
     /// ```
     fn inv(&self) -> Option<Self> {
         if self.is_zero() {
@@ -95,6 +92,7 @@ impl<const P: u64> Fp<P> {
         Fp(n % P)
     }
 
+    /// Returns the underlying integer representative in `0..P`.
     pub(crate) fn value(&self) -> u64 {
         self.0
     }

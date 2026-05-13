@@ -341,3 +341,49 @@ fn test_poly_fp7_gcd_with_common_factor() {
     // gcd should be a scalar multiple of x+1
     assert_eq!(d.degree(), Some(1));
 }
+
+#[test]
+fn test_poly_fp7_gcd_divides_both() {
+    type F = Fp<7>;
+    let factor = Poly::new(vec![F::new(1), F::new(1)]); // x + 1
+    let f = &factor * &Poly::new(vec![F::new(2), F::new(1)]); // (x+1)(x+2)
+    let g = &factor * &Poly::new(vec![F::new(3), F::new(1)]); // (x+1)(x+3)
+    let d = Poly::gcd(f.clone(), g.clone());
+    let (_, r_f) = f.div_rem(d.clone());
+    let (_, r_g) = g.div_rem(d);
+    assert!(r_f.is_zero());
+    assert!(r_g.is_zero());
+}
+
+#[test]
+fn test_poly_fp7_gcd_coprime_divides_both() {
+    type F = Fp<7>;
+    let f = Poly::new(vec![F::new(1), F::new(1)]); // x + 1
+    let g = Poly::new(vec![F::new(1), F::new(2)]); // 2x + 1
+    let d = Poly::gcd(f.clone(), g.clone());
+    let (_, r_f) = f.div_rem(d.clone());
+    let (_, r_g) = g.div_rem(d);
+    assert!(r_f.is_zero());
+    assert!(r_g.is_zero());
+}
+
+#[test]
+fn test_poly_fp7_ext_gcd_bezout() {
+    type F = Fp<7>;
+    // coprime pair: gcd = 1, Bézout: s*(x+1) + t*(2x+1) = 1
+    let a = Poly::new(vec![F::new(1), F::new(1)]); // x + 1
+    let b = Poly::new(vec![F::new(1), F::new(2)]); // 2x + 1
+    let (g, s, t) = Poly::ext_gcd(a.clone(), b.clone());
+    assert_eq!(&(&s * &a) + &(&t * &b), g);
+}
+
+#[test]
+fn test_poly_fp7_ext_gcd_bezout_common_factor() {
+    type F = Fp<7>;
+    // pair with common factor x+1
+    let factor = Poly::new(vec![F::new(1), F::new(1)]);
+    let a = &factor * &Poly::new(vec![F::new(2), F::new(1)]);
+    let b = &factor * &Poly::new(vec![F::new(3), F::new(1)]);
+    let (g, s, t) = Poly::ext_gcd(a.clone(), b.clone());
+    assert_eq!(&(&s * &a) + &(&t * &b), g);
+}

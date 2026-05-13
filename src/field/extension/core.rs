@@ -1,19 +1,19 @@
-//! [`FiniteSimpleExtension`]: the quotient field F[x]/(M(x)).
+//! [`FiniteSimpleExtension`]: the quotient field F\[x\]/(M(x)).
 //!
 //! # Mathematical background
 //!
-//! Given a field F and an irreducible polynomial M ∈ F[x] of degree n, the
-//! quotient ring F[x]/(M(x)) is a field. It is an n-dimensional F-vector space,
+//! Given a field F and an irreducible polynomial M ∈ F\[x\] of degree n, the
+//! quotient ring F\[x\]/(M(x)) is a field. It is an n-dimensional F-vector space,
 //! and the image of x — accessible via [`FiniteSimpleExtension::generator`] — is a root
 //! of M in this field.
 //!
 //! This is the universal construction: every simple algebraic extension E/F is
-//! isomorphic to F[x]/(m(x)) where m is the minimal polynomial of a primitive
+//! isomorphic to F\[x\]/(m(x)) where m is the minimal polynomial of a primitive
 //! element θ ∈ E with F(θ) = E.
 //!
 //! # Representation
 //!
-//! Every element of F[x]/(M(x)) is uniquely represented by a polynomial of degree
+//! Every element of F\[x\]/(M(x)) is uniquely represented by a polynomial of degree
 //! strictly less than deg(M). `FiniteSimpleExtension<F, M>` stores this canonical
 //! representative in the `repr` field.
 //!
@@ -80,6 +80,10 @@ impl<F: Field, M: IrreduciblePoly<F>> FiniteSimpleExtension<F, M> {
         }
     }
 
+    /// Returns the matrix of the F-linear map "multiply by `self`" in the basis `{1, α, …, α^{n-1}}`.
+    ///
+    /// Column `k` contains the coefficients of `self · α^k` expressed in the same basis.
+    /// Used internally to compute [`FiniteExtension::norm`] and [`SeparableFiniteExtension::trace`].
     pub(crate) fn multiplication_matrix(&self) -> Vec<Vec<F>> {
         let n = M::degree();
         let mut cols = Vec::with_capacity(n);

@@ -177,7 +177,13 @@ pub trait SeparableCharPFiniteExtension: CharPFiniteExtension + SeparableFiniteE
     }
 }
 
+/// A type whose multiplicative group is cyclic with a known primitive generator.
+///
+/// For a finite field of size `q` the multiplicative group has order `q − 1` and is
+/// cyclic. Implementing this trait exposes a specific element of order exactly `q − 1`.
 pub trait HasMultiplicativeGenerator: Sized {
+    /// Returns a primitive generator of the multiplicative group — an element of
+    /// order `size() - 1`.
     fn multiplicative_generator() -> Self;
 }
 

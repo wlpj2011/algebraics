@@ -64,20 +64,30 @@ pub trait CommutativeRing: Ring {}
 ///   or `b == Zero::zero()`
 pub trait IntegralDomain: CommutativeRing {}
 
-/// A [`IntegralDomain`] with a Euclidean Function
-/// This allows a well-defined division algorithm and gcd
+/// An [`IntegralDomain`] equipped with a Euclidean function.
+///
+/// This allows a well-defined division algorithm and gcd.
 /// Note that gcds can be defined far more generally than this!
+///
 /// # Contract
-/// - There exists a Euclidean function `f` such that for `a`, `b` in the Domain, `b` non-zero
-///   then there exits `q` and `r` in the domain with `a = b * q + r` and either `r == Zero::zero()` or `f(r) < f(b)`.
+/// - There exists a Euclidean function `f` such that for `a`, `b` in the domain with `b` non-zero,
+///   there exist `q` and `r` in the domain with `a = b * q + r` and either `r == Zero::zero()` or `f(r) < f(b)`.
 /// - For the above, we have `(q, r) = div_rem(a, b)`.
-/// - Note that `f` does not need to be stated anywhere, the particular `f` is not important, just that div_rem returns as above.
+/// - The particular `f` need not be specified; only the contract on `div_rem` matters.
 pub trait EuclideanDomain: IntegralDomain {
+    /// Returns `(quotient, remainder)` satisfying `self == other * quotient + remainder`,
+    /// where either `remainder` is zero or the Euclidean function of `remainder` is strictly
+    /// less than that of `other`.
+    ///
     /// # Panics
     /// Panics if `other` is zero — this is a programmer error, not a
     /// recoverable condition. Check before calling.
     fn div_rem(self, other: Self) -> (Self, Self);
 
+    /// Returns a greatest common divisor of `a` and `b` via the Euclidean algorithm.
+    ///
+    /// Returns `a` if `b` is zero. The result is not necessarily normalized
+    /// (e.g., for polynomials over a field the result may not be monic).
     fn gcd(mut a: Self, mut b: Self) -> Self {
         // guard: gcd(0,0) is undefined
         while !b.is_zero() {
@@ -88,6 +98,8 @@ pub trait EuclideanDomain: IntegralDomain {
         a
     }
 
+    /// Returns `(g, s, t)` where `g` is a gcd of `a` and `b` and `s * a + t * b == g`
+    /// (Bézout's identity).
     fn ext_gcd(a: Self, b: Self) -> (Self, Self, Self)
     where
         Self: Clone,

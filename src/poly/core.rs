@@ -108,7 +108,7 @@ impl<T: Zero + PartialEq> Poly<T> {
         }
     }
 
-    /// Creates a new polynomial from a single ring element, embedding in T[X] as a constant polynomial.
+    /// Creates a new polynomial from a single ring element, embedding in T\[X\] as a constant polynomial.
     pub fn new_constant(coeff: T) -> Self {
         Self::new(vec![coeff])
     }
@@ -143,3 +143,25 @@ impl<T: Ring> Ring for Poly<T> {
 
 impl<T: CommutativeRing> CommutativeRing for Poly<T> {}
 impl<T: IntegralDomain> IntegralDomain for Poly<T> {}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::field::Fp;
+
+    #[test]
+    fn test_coeff_beyond_degree_returns_zero() {
+        let p = Poly::new(vec![Fp::<7>::new(3), Fp::<7>::new(5)]); // 3 + 5x, degree 1
+        assert_eq!(p.coeff(0), Fp::<7>::new(3));
+        assert_eq!(p.coeff(1), Fp::<7>::new(5));
+        assert_eq!(p.coeff(2), Fp::<7>::zero()); // one past degree
+        assert_eq!(p.coeff(100), Fp::<7>::zero()); // well past degree
+    }
+
+    #[test]
+    fn test_coeff_zero_poly_returns_zero() {
+        let z: Poly<Fp<7>> = Poly::zero();
+        assert_eq!(z.coeff(0), Fp::<7>::zero());
+        assert_eq!(z.coeff(5), Fp::<7>::zero());
+    }
+}
