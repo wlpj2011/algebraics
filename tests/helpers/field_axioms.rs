@@ -9,7 +9,6 @@ pub fn check_field_axioms<F: Field + Debug>(elems: &[F]) {
 
 pub fn check_multiplicative_inverse_identity<F: Field + Debug>(elems: &[F]) {
     for a in elems {
-        assert_eq!(a.clone() * F::one(), a.clone());
         if !a.is_zero() {
             assert_eq!(a.clone() * (a.inv().unwrap()), F::one());
         }

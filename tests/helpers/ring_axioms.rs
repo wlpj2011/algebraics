@@ -7,6 +7,15 @@ pub fn check_ring_axioms<F: Ring + Debug>(elems: &[F]) {
     check_additive_inverse_identity(elems);
     check_multiplication_associative(elems);
     check_multiplication_zero(elems);
+    check_multiplicative_identity(elems);
+    check_distributivity_axioms(elems);
+}
+
+pub fn check_multiplicative_identity<F: Ring + Debug>(elems: &[F]) {
+    for a in elems {
+        assert_eq!(a.clone() * F::one(), a.clone());
+        assert_eq!(F::one() * a.clone(), a.clone());
+    }
 }
 
 pub fn check_commutative_ring_axioms<F: CommutativeRing + Debug>(elems: &[F]) {
@@ -63,8 +72,26 @@ pub fn check_multiplication_commutative<F: CommutativeRing + Debug>(elems: &[F])
     }
 }
 
-pub fn check_multiplication_zero< F: Ring + Debug>(elems: &[F]) {
+pub fn check_multiplication_zero<F: Ring + Debug>(elems: &[F]) {
     for a in elems {
-        assert_eq!(a.clone() * F::zero(), F::zero())
+        assert_eq!(a.clone() * F::zero(), F::zero());
+        assert_eq!(F::zero() * a.clone(), F::zero());
+    }
+}
+
+pub fn check_distributivity_axioms<F: Ring + Debug>(elems: &[F]) {
+    for a in elems {
+        for b in elems {
+            for c in elems {
+                assert_eq!(
+                    a.clone() * (b.clone() + c.clone()),
+                    a.clone() * b.clone() + a.clone() * c.clone()
+                );
+                assert_eq!(
+                    (a.clone() + b.clone()) * c.clone(),
+                    a.clone() * c.clone() + b.clone() * c.clone()
+                );
+            }
+        }
     }
 }

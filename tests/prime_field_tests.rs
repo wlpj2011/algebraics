@@ -35,7 +35,6 @@ fn test_fp547_axioms_exhaustive() {
     check_field_axioms(&elems);
 }
 
-
 #[test]
 fn test_fp7_enumeration_size() {
     type F = Fp<7u64>;
