@@ -9,6 +9,7 @@
 pub mod traits;
 
 pub mod arithmetic;
+pub mod characters;
 pub mod conway;
 pub mod field;
 pub mod matrix_arithmetic;

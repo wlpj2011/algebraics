@@ -108,6 +108,27 @@ pub(crate) const fn miller_rabin_check(n: u64, a: u64, d: u64, r: u64) -> bool {
     false
 }
 
+/// Returns the distinct prime factors of `n` in ascending order.
+///
+/// Uses trial division up to √n. Returns an empty vec for n ≤ 1.
+pub(crate) fn prime_factors(mut n: u64) -> Vec<u64> {
+    let mut factors = Vec::new();
+    let mut d = 2u64;
+    while d * d <= n {
+        if n % d == 0 {
+            factors.push(d);
+            while n % d == 0 {
+                n /= d;
+            }
+        }
+        d += 1;
+    }
+    if n > 1 {
+        factors.push(n);
+    }
+    factors
+}
+
 #[cfg(test)]
 mod tests {
     use super::is_prime;

@@ -93,7 +93,7 @@ impl<const P: u64> Fp<P> {
     }
 
     /// Returns the underlying integer representative in `0..P`.
-    pub(crate) fn value(&self) -> u64 {
+    pub fn value(&self) -> u64 {
         self.0
     }
 }
@@ -111,5 +111,24 @@ impl<const P: u64> Finite for Fp<P> {
 impl<const P: u64> FiniteRing for Fp<P> {
     fn is_unit(&self) -> bool {
         !self.is_zero()
+    }
+}
+
+impl<const P: u64> HasMultiplicativeGenerator for Fp<P> {
+    /// Returns the smallest primitive root of F_p.
+    ///
+    /// A primitive root g satisfies g^((p-1)/q) ≠ 1 for every prime q | p-1.
+    fn multiplicative_generator() -> Self {
+        use crate::arithmetic::{mod_pow, prime_factors};
+        let factors = prime_factors(P - 1);
+        'outer: for g in 2..P {
+            for &q in &factors {
+                if mod_pow(g, (P - 1) / q, P) == 1 {
+                    continue 'outer;
+                }
+            }
+            return Fp::new(g);
+        }
+        panic!("no primitive root found for Fp<{P}>")
     }
 }
