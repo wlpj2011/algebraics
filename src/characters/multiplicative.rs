@@ -1,5 +1,5 @@
 use std::marker::PhantomData;
-use crate::traits::{Finite, FiniteField, HasMultiplicativeGenerator};
+use crate::traits::{CharPField, Finite, FiniteField, HasMultiplicativeGenerator};
 
 /// A multiplicative character χ_k: F* → Z/(q−1)Z.
 ///
@@ -8,7 +8,7 @@ use crate::traits::{Finite, FiniteField, HasMultiplicativeGenerator};
 ///
 /// - `k = 0` → trivial character (every nonzero element maps to exponent 0, i.e. value 1)
 /// - `k = 1` → Teichmüller character ω (canonical character of order q−1)
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug)]
 pub struct MultiplicativeCharacter<F: Finite> {
     index: u64,
     _f: PhantomData<F>,
@@ -46,6 +46,39 @@ impl<F: Finite> MultiplicativeCharacter<F> {
 
     pub fn is_trivial(&self) -> bool {
         self.index == 0
+    }
+}
+
+impl<F: CharPField + Finite> MultiplicativeCharacter<F> {
+    /// The Frobenius action on characters: χ_k ↦ χ_{pk mod (q−1)}.
+    ///
+    /// Geometrically, this is precomposition with the inverse Frobenius:
+    /// (σ_p* χ)(x) = χ(x^p) = χ_{pk}(x).
+    pub fn frobenius(&self) -> Self {
+        let p = F::characteristic();
+        let order = (F::size() - 1) as u64;
+        let new_index = ((p as u128 * self.index as u128) % order as u128) as u64;
+        Self { index: new_index, _f: PhantomData }
+    }
+}
+
+impl<F: Finite> PartialEq for MultiplicativeCharacter<F> {
+    fn eq(&self, other: &Self) -> bool {
+        self.index == other.index
+    }
+}
+
+impl<F: Finite> Eq for MultiplicativeCharacter<F> {}
+
+impl<F: Finite> PartialOrd for MultiplicativeCharacter<F> {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl<F: Finite> Ord for MultiplicativeCharacter<F> {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.index.cmp(&other.index)
     }
 }
 

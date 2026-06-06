@@ -108,6 +108,21 @@ pub(crate) const fn miller_rabin_check(n: u64, a: u64, d: u64, r: u64) -> bool {
     false
 }
 
+/// Returns the base-`base` digit sum of `n`.
+///
+/// Returns `n` unchanged if `base ≤ 1`.
+pub fn digit_sum_base(mut n: u64, base: u64) -> u64 {
+    if base <= 1 {
+        return n;
+    }
+    let mut sum = 0;
+    while n > 0 {
+        sum += n % base;
+        n /= base;
+    }
+    sum
+}
+
 /// Returns the distinct prime factors of `n` in ascending order.
 ///
 /// Uses trial division up to √n. Returns an empty vec for n ≤ 1.

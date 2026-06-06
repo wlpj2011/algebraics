@@ -1,3 +1,4 @@
+use crate::arithmetic::digit_sum_base;
 use crate::traits::{FiniteField, HasMultiplicativeGenerator, SeparableCharPFiniteExtension};
 use super::additive::AdditiveCharacter;
 use super::multiplicative::MultiplicativeCharacter;
@@ -133,18 +134,6 @@ pub fn stickelberger_element(q: u64) -> Vec<(u64, (u64, u64))> {
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────
-
-fn digit_sum_base(mut n: u64, base: u64) -> u64 {
-    if base <= 1 {
-        return n;
-    }
-    let mut sum = 0;
-    while n > 0 {
-        sum += n % base;
-        n /= base;
-    }
-    sum
-}
 
 fn gcd(mut a: u64, mut b: u64) -> u64 {
     while b != 0 {
